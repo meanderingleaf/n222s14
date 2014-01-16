@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<html>
+    <head>
+        <title>Tip calculator</title>
+        <style>
+            body { background: #000; font-family: sans-serif; }
+            h1 {
+                color: #555;
+            }
+            #container { 
+                width: 600px; 
+                margin: 0 auto; 
+                background: #fff; 
+                padding: 20px;
+             }
+
+             .row {
+                margin: 10px;
+             }
+
+             #txtTip {
+                color: #000099;
+             }
+
+             .res {
+                color: #009900;
+             }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1>
+Tip caclulcator
+</h1>
+            <div id="txtTip"></div>
+            <div>
+                <div class="row">
+                    
+Bill amount: <input id="txtBill" />
+</div>
+                <div class="row">
+                    
+Service was: <select id="serviceSelect"> <option value="0.05">Poor</value> <option value="0.10">Fair</value> <option value="0.15">Good</value> <option value="0.20">Excellent</value> </select>
+</div>
+                <div class="row">
+<input id="btnCalculate" type="button" value="Calculate tip" />
+</div>
+            </div>
+        </div>
+        <script>
+
+            var txtBill = document.getElementById("txtBill");
+            var btnCalculate = document.getElementById("btnCalculate");
+            var serviceSelect = document.getElementById("serviceSelect");
+            var txtTip = document.getElementById("txtTip");
+
+            btnCalculate.addEventListener("click", function() {
+                //get bill's value
+                var billAmount = txtBill.value;
+
+                //get service level
+                var serviceLevel = serviceSelect.value;
+
+                //calc total
+                var total = billAmount * serviceLevel;
+
+                var formatted =  formatAsCurrency(total);
+
+                //display total
+                txtTip.innerHTML = "You should tip <span class='res'>" + formatted + "</span>.";
+            });
+
+            function formatAsCurrency(number) {
+                return "$" + number.toFixed(2);
+            }
+
+        </script>
+    </body>
+</html>
+</body>
+</html>
