@@ -1,0 +1,187 @@
+
+1
+------------------
+
+**Introduction to course**
+
+	Review of HTML, Javascript, CSS
+
+In class/homework: build a calculator
+
+2
+------------------
+
+**jquery**
+
+Setting up XAMPP
+jQuery
+
+In class:
+	jQuery selectors
+	Changing html with jquery
+	Changing styles with jquery
+	Netflix-style selector
+
+Homework:
+	Install XAMPP
+	Codecademy jQuery, first half
+
+3
+------------------------
+
+**jQuery, ajax**
+
+In class:
+	Responding to events with jquery
+	Loading in data via ajax
+
+Homework:
+	Codecademy jQuery, second half
+
+4
+------------------------
+
+**Layout and animation**
+
+In class:
+	jQuery.show()
+	jQuery.hide()
+	jQuery.delay()
+	jQuery.animate
+	chaining
+
+Homework:
+	Given a UI mockup, split it up and build the elements in
+
+5
+--------------------------
+
+**Sprites**
+
+Introduction to the spritesheets
+CSS Sprite sheets
+Canvas sprite sheets
+Using shoebox to make a sprite sheet
+
+Homework:
+	Create a 3 sprites of a fruit changing color from red to green using shoebox
+	Create a website with these three that change to red on mouse over, and green on mouse out
+
+6
+----------------------------
+
+**Collision detection and Phaser**
+ Basics of collision detection
+ How to accomplish collision detection in jQuery
+
+ Basics of phaser
+ How to accomplish in Phaser
+
+ Homework:
+ 	Implement a simple drag and drop system for the fuits above
+
+ 7
+ -----------------------------
+
+ **Phaser breakdown**
+
+Breakdown of a phaser shoot-em-up
+
+Homework:
+	Update the shoot-em-up with their own animated sprite and change the color of the score box
+
+8
+----------------------------------
+
+**Prototypes**
+
+Background of the javascript prototype system
+Show how to add some simple extensions to a phaser sprite using its prototype
+
+Homework: review
+
+9
+------------------------------------
+
+Midterm
+
+10
+--------------------------------------
+
+**GIT**
+
+- Installing Source tree
+- Creating a repo
+- Pushing to the repo
+- Making a change
+- Pushing the change to the repo
+- Pulling another repo
+
+Homework: 
+	By next week, send me a link with those things accomplished.
+	First commit should have a .txt file in it that says "Hello world"
+	Second commit should have the .txt file say "Hello edit"
+
+11
+-----------------------------------------
+
+**JSON**
+
+Lecture on markup
+Show how to markup different things:
+	Employees
+	Albums
+	Trees?
+
+Homework:
+	Markup their own library. 10 books. Needs author, publisher, year published, title, and a brief blurb about each one
+
+12
+------------------------------------------
+
+**Audio and video**
+
+Using the audio and video tags
+
+Codecs, supported browsers
+Interfacing with the tags via JS
+
+in class:
+	Getting, encoding, starting, stopping a piece of audio
+	Making a playlist of audio, using JSON
+
+homework:
+	Make the playlist autoplay the next tune when one is complete
+
+13
+-------------------------------------------
+
+**Application State and components**
+
+How to use a component library - moustache
+Storing component state
+Storing application state
+
+in class/homework:
+	More robust player that shows now playing, highlights current playing in playlist, next, prev buttons
+
+14
+----------------------------------------------
+
+**Application architexture and building**
+
+In class:
+	Topical
+
+15
+-----------------------------------------------
+
+**Node & Review**
+
+Download and install node
+Write a simple server application
+
+16
+-----------------------------------------------
+
+FINAL

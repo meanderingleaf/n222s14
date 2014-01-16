@@ -1,0 +1,178 @@
+%n222 Intro
+
+
+Media Applications 2
+-----------------------------
+
+Travis Faas
+Media Arts and Science, IUPUI
+
+
+Welcome back
+------------------------------
+
+- This class builds upon n221
+- Javascript
+
+- Some things that you will need to know:
+- HTML
+- CSS
+
+HTML
+------------------------------
+
+- Basic tags
+
+- div
+- ul, li
+- p
+- a
+- img
+- span
+
+CSS
+------------------------------
+
+- Box model (padding and margin)
+- Positioning
+	- Absolute and relative
+	- Pixels?
+	- %
+	- EMs
+- Colors
+	- #FF0000
+- Width
+- Height
+- Background color, text color
+	- TO SET TEXT COLOR: 'color' property
+- CSS Sprites, background images
+	- not img tag BUT
+	- background-image property
+
+Javascript
+----------------------------------
+
+Variables
+---------------------------------
+
+- string, number, bool
+
+	var aString = "Hello world";
+	var aNumber = 5;
+	var aBool = true;
+
+Comments
+---------------------------------
+
+	//comments, single line
+	/*
+		Comments
+		Mutli -line
+		Block comment
+	*/
+
+Numerical Operators (and comments)
+----------------------------------
+
+	var a = 4;
+	var b = 2;
+	
+	var c = a + b; //6
+	var d = a - b; //2
+	var e = a / b; //2
+	var f = a % b; //0
+
+	//ASSUMING THE ORIGINAL A
+	a /= 2; // 2
+	a *= 2; // 8
+	a ++; //5
+	a += 3; //7
+
+
+String concatenation
+----------------------------------
+
+	var base = "Hello ";
+	var name = "John";
+	var greeting = base + name; //"Hello John"
+	var greeting2 = base + name + "!"; //"Hello John!"
+
+Objects
+----------------------------------
+
+- acessing via the dot operator
+
+	var myObject = { firstName:"Stew", lastName: "John", age: 1004 };
+	myObject.lastName; // "John"
+	myObject.age = 24;
+	myObject.age; //24
+
+
+Arrays
+----------------------------------
+
+- first index zero
+- square brackets
+
+	var myArray = ["cat", "dog", "mouse"];
+	myArray[1]; //"dog";
+	myArray[1] = "tank";
+	myArray[1]; //"tank"
+
+DOM Node references
+----------------------------------
+
+	<div id="header"></div>
+
+- In JS
+
+	var divRef = document.getElementById('header');
+
+innerHTML
+----------------------------------
+
+	<div id="header"></div>
+
+- In JS
+
+	var divRef = document.getElementById('header');
+	divRef.innerHTML = "Hello again";
+
+- Div will now display:
+
+	<div id="header">Hello again</div>
+
+Event Listeners
+---------------------------------
+
+	divRef.addEventListener("click", function() {
+		console.log("this div has been clicked")
+	})
+
+Developer tools
+----------------------------------
+
+- Use them
+- If you haven't been using them
+	- Use them
+
+Console.log
+----------------------------------
+
+- Getting values out of javascript and into 
+
+The Other Stuff
+----------------------------------
+
+- Less important, but may still come up
+
+- Animation
+- Searching arrays
+- Data
+- Canvas
+
+Review time
+----------------------------------
+
+- Have a question, I will answer it now
+- If there's something you're not clear on, now is the time to review
