@@ -21,6 +21,8 @@ In class:
 	Changing html with jquery
 	Changing styles with jquery
 	Netflix-style selector
+	Image magnifier
+	Introduce project 1
 
 Homework:
 	Install XAMPP
@@ -34,6 +36,7 @@ Homework:
 In class:
 	Responding to events with jquery
 	Loading in data via ajax
+	Lightbox
 
 Homework:
 	Codecademy jQuery, second half
@@ -48,7 +51,6 @@ In class:
 	jQuery.hide()
 	jQuery.delay()
 	jQuery.animate
-	chaining
 
 Homework:
 	Given a UI mockup, split it up and build the elements in

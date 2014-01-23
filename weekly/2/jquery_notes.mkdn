@@ -1,0 +1,8 @@
+jQuery
+----------------------------------------
+
+Plain JS is troublesome
+-----------------------------------------
+
+- Verbose
+- Browser inconsistencies

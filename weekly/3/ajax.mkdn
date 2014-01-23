@@ -1,0 +1,215 @@
+AJAX
+--------------------------------------
+
+- Short for Asynchronous Javascript and XML
+- A method for loading in textual resource at runtime
+- Developed by Microsoft
+	- Yes, they did something good for the web!
+
+AJAX
+----------------------------------------
+
+A way of loading in new content for your application
+
+- XML
+- JSON
+- HTML
+- Entirely new pages
+	- Lightboxes
+
+- Can send data along with the request as well
+	- POST
+	- GET
+
+
+Longform AJAX
+-----------------------------------------
+
+```
+$.ajax({
+  url: "test.html",
+  context: document.body
+}).done(function() {
+  $( this ).addClass( "done" );
+});
+```
+
+- Supply an object to the ajax function
+- Specify URL to load
+- Specify function to run if the load is a success
+
+
+Shortform AJAX - GET
+---------------------------------------------
+
+- Short form
+- Loads in data from the first URL
+
+```
+$.get( "ajax/test.html", function( data ) {
+  $( ".result" ).html( data );
+  alert( "Load was performed." );
+});
+```
+
+AJAX - Sending data
+----------------------------------------------
+
+- Specify the data property of the ajax object
+- This data property should be in the form of an object
+
+```
+$.ajax({
+  type: "POST",
+  url: "some.php",
+  data: { name: "John", location: "Boston" }
+})
+.done(function( msg ) {
+	alert( "Data Saved: " + msg );
+});
+```
+
+Putting it together - making a single page site
+---------------------------------------------
+
+**index.html**
+
+<html>
+	<head>
+		<title>Hey There</title>
+	</head>
+	<body>
+		<div id="nav">
+			<ul>
+				<li id="btnHome">Home</li>
+				<li id="btnAbout">About</li>
+			</ul>
+		</div>
+		<div id='content'></div>
+	</body>
+</html>
+
+**home.html** - fragment
+
+<div>
+	This is the home div!
+</div>
+
+**about.html** - fragment
+
+<div>
+	<p>This is the about div!</p>
+	<ul>
+		<li>Here's</li>
+		<li>Some</li>
+		<li>About</li>
+		<li>Stuff</li>
+	</ul>
+</div>
+
+
+Putting it together - Javascript
+----------------------------------------------
+
+```
+<script src="js/jquery.min.js"></script>
+<script>
+	$("#btnHome").click(function() {
+		$.get("index.html", function( data ) {
+			$("#content").html(data);
+		})
+	})
+
+	$("#btnAbout").click(function() {
+		$.get("index.html", function(data) {
+			$("#content").html(data);
+		})
+	})
+</script>
+```
+
+
+Hash values
+----------------------------------------------
+
+Has values come after the **#** sign in a webpage's URL
+For example:
+
+www.example.com/example.html#someHashValue
+
+
+Getting hash values
+-----------------------------------------------
+
+In javascript, typing
+
+```
+var windowHash = window.location.hash;
+```
+
+Store the value "someHashValue" in the variable `windowHash`
+
+
+Setting hash values
+------------------------------------------------
+
+```
+window.location.hash = "newHash";
+```
+
+Will update the hash value for the page
+
+
+Using hashes to make 'pages'
+---------------------------------------------------
+
+```
+<script src="js/jquery.min.js"></script>
+<script>
+	
+	//runs when the page first loads
+	//get the hash
+	var hashVal = window.location.hash;
+
+	//
+	if(hashVal == "about") {
+		$("#btnAbout").click();
+	} else if(hashVal == "Home") {
+		$("#btnHome").click();
+	}
+
+	//listeners
+	$("#btnHome").click(function() {
+		$.get("index.html", function( data ) {
+			$("#content").html(data);
+
+			window.location.hash = "home";
+		})
+	})
+
+	$("#btnAbout").click(function() {
+		$.get("index.html", function(data) {
+			$("#content").html(data);
+
+			window.location.hash = "about";
+		})
+	})
+</script>
+```
+
+Scripting new pages
+--------------------------------------------------
+
+Scripts that are part of loaded AJAX content run once added to the DOM
+
+**fragment.html**
+```
+<script>
+	$(".someText").click(function() {
+		console.log("Hello world!");
+	})
+</script>
+<div>
+	<p class="someText">Hey there! Click me!</p>
+</div>
+```
