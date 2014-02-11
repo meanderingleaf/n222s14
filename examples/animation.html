@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>Animation examplimation</title>
+		<script src="jquery.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$("#someRandomDiv").click(function() {
+					$(this).hide(1200);
+				})
+			})
+		</script>
+		<style>
+			#someRandomDiv {
+				width: 200px;
+				height: 200px;
+				background: #0f9cee;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="someRandomDiv"></div>
+	</body>
+</html>
