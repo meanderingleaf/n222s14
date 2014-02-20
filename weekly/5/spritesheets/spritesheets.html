@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Sup</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">Sup</h1>
+</div>
+<h1 id="spritesheets-canvas-javascript">Spritesheets, canvas, javascript</h1>
+<p>How about some #hashtags with that #amazing #title. (Isn’t the future great? I can just imagine the “Declaration of #Independance”).</p>
+<p>Spritesheets are a way of storing, and reproducing animated elements inside of many media applications. They look like this:</p>
+<div class="figure">
+<img src="img/sheet.png" />
+</div>
+<p>Just in case this is a bit confusing, here is another representation of how the sheet is laid out (and what the computer thinks of it:)</p>
+<div class="figure">
+<img src="img/sheet_grid.jpg" />
+</div>
+<p>In this particular spritesheet, we have <strong>6 frames</strong> of animation. The frames are stacked right next to each other, always taking up a set width and height.</p>
+<p>An interactive media engine that uses a spritesheet will load up the whole image, but only show data from one of those particular frames. This is a method that is somtimes called <em>blitting</em>, or copying data from one bitmat to another at a fairly fast rate. Let’s get started making a Javascript ‘class’ that can handle spritesheets for us. We’re going to pass in the basic information it needs to know - the width and height of the sprite, and the image to use as the spritesheet.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+<span class="kw">function</span> Sprite(sheetUrl, swidth, sheight) {
+
+    <span class="co">//get a persistent reference to this particular object</span>
+    <span class="kw">var</span> me = <span class="kw">this</span>;
+    
+    <span class="co">//save the width and height of the sprite</span>
+    <span class="kw">this</span>.<span class="fu">width</span> = swidth;
+    <span class="kw">this</span>.<span class="fu">height</span> = sheight;
+
+    <span class="co">//create a new image, begin to load it</span>
+    <span class="kw">this</span>.<span class="fu">image</span> = <span class="kw">new</span> <span class="kw">Image</span>();
+    <span class="kw">this</span>.<span class="fu">image</span>.<span class="fu">src</span> = sheetUrl;
+    
+}</code></pre>
+<p>Note that we use the “me” in this case, to make sure we are referencing the current object we are using. This will happen in other parts of the code. For the most part, “me” and “this” are interoperable (but not always!).</p>
+<h2 id="adding-the-canvas">Adding the canvas</h2>
+<p>Okay, we will return to our sprite code in a bit. First, we need some way to display it. We’re going to add a canvas to our code. Inside the body of your html, add this tag:</p>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;canvas</span><span class="ot"> id=</span><span class="st">&quot;myCanv&quot;</span><span class="ot"> width=</span><span class="st">&quot;400&quot;</span><span class="ot"> height=</span><span class="st">&quot;300&quot;</span><span class="kw">&gt;&lt;/canvas&gt;</span></code></pre>
+<p>And then, in our javascript tag, let’s add an init function, and get our canvas setup:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"> <span class="kw">var</span> ctx;
+
+<span class="kw">function</span> init() {
+    
+    <span class="co">//get the canvas</span>
+    <span class="kw">var</span> canvas = <span class="kw">document</span>.<span class="fu">getElementById</span>(<span class="st">&quot;myCanv&quot;</span>);
+    
+    <span class="co">//store the context to draw into:</span>
+    ctx = <span class="kw">canvas</span>.<span class="fu">getContext</span>(<span class="ch">&#39;2d&#39;</span>);
+  
+}</code></pre>
+<p>Great, now we have a canvas, and a context that we can use to draw into it. Let’s draw our sprite.</p>
+<h2 id="animation-code">Animation code</h2>
+<p>Before we go much first, go ahead and download the first spritesheet above, and put it inside a folder beneath your root XML named “assets”. Make sure the spritesheet is called “sheet.png”.</p>
+<p>We need some way to run some function on a reliable delay. HTML5 provides one approach using the <code>requestAnimationFrame</code> function. Here’s how to get it set up. We’ll also be getting our sprite setup as we go along.</p>
+<p>First, up where you defined your canvas context, we’re going to add a variable for your sprite:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> ctx, mySprite;</code></pre>
+<p>Next, inside your init function, add this code:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">mySprite = <span class="kw">new</span> Sprite(<span class="st">&quot;assets/sheet.png, 32, 65&quot;</span>);
+requestAnimationFrame(update);</code></pre>
+<p>Then, outside of that function, make the update function. It <em>must</em> run the line at the bottom, or the function will only be called once.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> update() {
+    <span class="kw">ctx</span>.<span class="fu">clearRect</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">400</span>,<span class="dv">300</span>);
+
+    <span class="kw">mySprite</span>.<span class="fu">update</span>();
+
+    requestAnimationFrame(update);
+}</code></pre>
+<p>Notice the <code>ctx.clearRect(0,0,400,300);</code>? Without that line, we wouldn’t get individual animation frames, but instead it would draw the new stuff over the old stuff (like painting over an already existing painting). This way, we will only see what we draw to the canvas each frame.</p>
+<p>Secondly, there is a <code>mySprite.update();</code>. We’re going to make that right now…</p>
+<h2 id="drawing-one-frame-of-a-sprite">Drawing one frame of a sprite</h2>
+<p>Let’s return to our sprite function, and draw just the first frame, for starters. (Oh yes, it will get more complex. But one stetp at a time.) Inside your load event handler, add this line of code:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">this</span>.<span class="fu">update</span> = <span class="kw">function</span>() {
+     <span class="kw">ctx</span>.<span class="fu">drawImage</span>(<span class="kw">me</span>.<span class="fu">image</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>);
+}</code></pre>
+<p>Yep, that is the same line of code you ran before, but now it is being done 30 times a second. Yeah! Waste that power!</p>
+<h2 id="getting-setup-to-draw-multiple-frames">Getting setup to draw multiple frames</h2>
+<p>Now things are going to get a bit more complex. We’re going to start drawing multiple frames. In order to do this, we’re going to need to store a few variables in our Sprite class. Let’s add them to the prototype (put this stuff outside of the Sprite function…. right beneath it works well.)</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Sprite.prototype</span>.<span class="fu">curFrame</span> = <span class="dv">0</span>;
+<span class="kw">Sprite.prototype</span>.<span class="fu">dCount</span> = <span class="dv">0</span>;
+<span class="kw">Sprite.prototype</span>.<span class="fu">delay</span> = <span class="dv">10</span>;
+<span class="kw">Sprite.prototype</span>.<span class="fu">framePosition</span> = { <span class="dt">row</span>:<span class="dv">0</span>, <span class="dt">col</span>: <span class="dv">0</span>};</code></pre>
+<p>Go inside the sprite function. We’re going to write a load even handler for the image. This handler will calculate the number of rows and columns in this particular spritesheet based on the width and height you specified the sprite as:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+<span class="kw">this</span>.<span class="fu">image</span>.<span class="fu">addEventListener</span>(<span class="st">&quot;load&quot;</span>, <span class="kw">function</span>() {
+    <span class="co">//calc number of frames per line</span>
+    <span class="kw">me</span>.<span class="fu">perLine</span> = <span class="kw">Math</span>.<span class="fu">floor</span>( <span class="kw">me.image</span>.<span class="fu">width</span> / swidth );
+    <span class="co">//calc number of lines</span>
+    <span class="kw">me</span>.<span class="fu">rows</span> = <span class="kw">Math</span>.<span class="fu">floor</span>( <span class="kw">me.image</span>.<span class="fu">height</span> / sheight );
+});</code></pre>
+<p>Great. Now we know the rows and columns of the sprite.</p>
+<h2 id="drawing-multiple-frames">Drawing multiple frames</h2>
+<p>Its going to get a bit math-y for a second. Replace the code inside your sprite.update function with this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">this</span>.<span class="fu">dCount</span> ++;
+<span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">dCount</span> &gt; <span class="kw">this</span>.<span class="fu">delay</span>) {
+    <span class="kw">this</span>.<span class="fu">curFrame</span> ++;
+    <span class="kw">this</span>.<span class="fu">dCount</span> = <span class="dv">0</span>;
+    
+    <span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">curFrame</span> &gt; <span class="dv">5</span>) {
+        <span class="kw">this</span>.<span class="fu">curFrame</span> = <span class="dv">0</span>;
+    }
+    
+    <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> = <span class="kw">Math</span>.<span class="fu">floor</span>( <span class="kw">this</span>.<span class="fu">curFrame</span> / <span class="kw">me</span>.<span class="fu">cols</span> );
+    <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> = <span class="kw">this</span>.<span class="fu">curFrame</span> % <span class="kw">me</span>.<span class="fu">cols</span>;
+}
+
+<span class="kw">ctx</span>.<span class="fu">drawImage</span>(<span class="kw">this</span>.<span class="fu">image</span>, 
+  <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> * <span class="kw">this</span>.<span class="fu">width</span>, 
+  <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> * <span class="kw">this</span>.<span class="fu">height</span>,
+  <span class="kw">this</span>.<span class="fu">width</span>,<span class="kw">this</span>.<span class="fu">height</span>,
+  <span class="dv">100</span>,<span class="dv">0</span>,<span class="kw">this</span>.<span class="fu">width</span>,<span class="kw">this</span>.<span class="fu">height</span>);</code></pre>
+<p>Let’s break this down, line-by-line:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">this</span>.<span class="fu">dCount</span> ++;
+
+<span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">dCount</span> &gt; <span class="kw">this</span>.<span class="fu">delay</span>) {
+    <span class="kw">this</span>.<span class="fu">curFrame</span> ++;
+    <span class="kw">this</span>.<span class="fu">dCount</span> = <span class="dv">0</span>;
+}</code></pre>
+<p>This snippet adds a delay between switching frames. If we didn’t have our delay (set to 10 in our prototype), the sprite would be animated so fast we couldn’t see the transitions well.</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">curFrame</span> &gt; <span class="dv">5</span>) {
+    <span class="kw">this</span>.<span class="fu">curFrame</span> = <span class="dv">0</span>;
+}</code></pre>
+<p>Resets the frame to play, if we’re beyond visible frames.</p>
+<p>Speaking of frames, here they are…</p>
+<div class="figure">
+<img src="img/sheet_indices.png" />
+</div>
+<p><em>Now</em> we need to find a way to figure out what x,y coordinate corresponds with the top left corner of the frame we are on. This gets a bit complex. First we figure out the current row and column our frame relates to. Here’s the lines for this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> = <span class="kw">Math</span>.<span class="fu">floor</span>( <span class="kw">this</span>.<span class="fu">curFrame</span> / <span class="kw">me</span>.<span class="fu">cols</span> );
+<span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> = <span class="kw">this</span>.<span class="fu">curFrame</span> % <span class="kw">me</span>.<span class="fu">cols</span>;</code></pre>
+<p>So, lets do the math quickly. Let’s say curFrame is 0:</p>
+<ul>
+<li>row = 0 / 2 = 0 (rounded down) = <strong>0</strong></li>
+<li>col = 0 % 2 = <strong>0</strong> (remainder)</li>
+</ul>
+<p>Let’s say curFrame = 1:</p>
+<ul>
+<li>row = 1/2 = .5 (rounded down) = <strong>0</strong></li>
+<li>col = 1 % 2 = <strong>1</strong> remainder</li>
+</ul>
+<p>Let’s say curFrame = 2:</p>
+<ul>
+<li>row = 2/2 = 1 (rounded down) = <strong>1</strong></li>
+<li>col = 2 % 2 = <strong>0</strong> remainder</li>
+</ul>
+<p>And so on.</p>
+<p>In other words, if we lay out our sprite sheets like this, and we know the number of rows and columns that our spritesheet has, we can easily cacluclate our <strong>current row</strong> by dividing the current frame number by the number of columns, and always rounding down. We can also easily calculate our <strong>current col</strong> by getting the remainder our frame’s number devided by our total columns.</p>
+<p>Okay, so with the math-y stuff over, let’s put this to use. You can see that our drawImage has changed a bit:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+<span class="kw">ctx</span>.<span class="fu">drawImage</span>(<span class="kw">this</span>.<span class="fu">image</span>, 
+  <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> * <span class="kw">this</span>.<span class="fu">width</span>, 
+  <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> * <span class="kw">this</span>.<span class="fu">height</span>,
+  <span class="kw">this</span>.<span class="fu">width</span>,<span class="kw">this</span>.<span class="fu">height</span>,
+  <span class="dv">100</span>,<span class="dv">0</span>,<span class="kw">this</span>.<span class="fu">width</span>,<span class="kw">this</span>.<span class="fu">height</span>);</code></pre>
+<p>Since we know our current row and column, we only need to multiply those by the sprite’s width and height to get the starting x and y location for our spritesheet copy method.</p>
+<p>Once we have all this code in, we have animation! But… its not tremendously configurable. In fact, with the given sprite sheet, we don’t even have a walk cycle! Its time to fix that.</p>
+<h2 id="enabling-multiple-animations">Enabling multiple animations</h2>
+<p>In order to have multiple, unique animations we need some way to store the different sets of frames to play. We’re going to do that by storing arrays of the frames… in an array. Add these lines beneath your Sprite object function to get this started:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+<span class="kw">Sprite.prototype</span>.<span class="fu">curAnimation</span> = <span class="st">&quot;&quot;</span>; <span class="co">//current animation playing</span>
+<span class="kw">Sprite.prototype</span>.<span class="fu">animations</span> = []; <span class="co">//array of all possible animations</span>
+
+<span class="co">//takes an animation name, and an array of frames to play in the animation</span>
+<span class="co">//registers it in our animations array</span>
+ <span class="kw">Sprite.prototype</span>.<span class="fu">addAnimation</span> = <span class="kw">function</span>(name, frames) {
+    <span class="kw">this</span>.<span class="fu">animations</span>[name] = frames;
+}</code></pre>
+<p>Great, now have have 1) a way to store different animations (as an array of frame #’s inside an object) 2) a way to store which is the “current” animation and 3) a way to add new animations to our sprite.</p>
+<p>We need to change our animation code a bit to make use of these new variables. Change the frame manipulation portion of your sprite.update method to have this code:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+ <span class="kw">this</span>.<span class="fu">dcount</span> ++;
+<span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">dcount</span> &gt;= <span class="kw">this</span>.<span class="fu">delay</span>) {
+    <span class="kw">this</span>.<span class="fu">dcount</span> = <span class="dv">0</span>;
+    <span class="kw">this</span>.<span class="fu">curFrame</span> ++;
+    
+    <span class="co">//if we&#39;re at the end of our current frames for this animation, go back to the start</span>
+    <span class="kw">if</span>(<span class="kw">this</span>.<span class="fu">curFrame</span> &gt;= <span class="kw">me</span>.<span class="fu">animations</span>[<span class="kw">me</span>.<span class="fu">curAnimation</span>].<span class="fu">length</span>) {
+        <span class="kw">this</span>.<span class="fu">curFrame</span> = <span class="dv">0</span>;
+    }
+    
+    <span class="co">//set row &amp; col position</span>
+    <span class="co">//using the frame number stored in our animation&#39;s current index</span>
+    <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> = <span class="kw">Math</span>.<span class="fu">floor</span>( <span class="kw">me</span>.<span class="fu">animations</span>[<span class="kw">me</span>.<span class="fu">curAnimation</span>][<span class="kw">me</span>.<span class="fu">curFrame</span>] / <span class="kw">me</span>.<span class="fu">perLine</span> );
+    <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> = <span class="kw">me</span>.<span class="fu">animations</span>[<span class="kw">me</span>.<span class="fu">curAnimation</span>][<span class="kw">me</span>.<span class="fu">curFrame</span>] % <span class="kw">me</span>.<span class="fu">perLine</span>;
+}
+</code></pre>
+<p>Before, we were just flying through every frame inside our spritesheet, and assuming that our ‘curFrame’ was the index of the sprite image we wanted to display. Now, curFrame is used to tell us which frame in our animation array. We then use that number to set the from position’s row and column.</p>
+<p>Let’s go ahead and set up one animation. Up inside your init function, right after you make the sprite:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">mySprite</span>.<span class="fu">addAnimation</span>(<span class="st">&quot;walk&quot;</span>, [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">1</span>]);
+<span class="kw">mySprite</span>.<span class="fu">play</span>(<span class="st">&quot;walk&quot;</span>);</code></pre>
+<p>This registers a walk animation in our array, and tells the sprite that it is to play frames 4,5,0,3,5,1 in order to show that particular animation. Finally, we need a way to actually play that animation. Let’s add one more method to our sprite’s prototype (you can see that we’ve already used it above):</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Sprite.prototype</span>.<span class="fu">play</span> =  <span class="kw">function</span>(name) {
+    <span class="kw">this</span>.<span class="fu">dcount</span> = <span class="kw">this</span>.<span class="fu">delay</span>; <span class="co">//force animation to restart</span>
+    <span class="kw">this</span>.<span class="fu">curFrame</span> = <span class="dv">0</span>; <span class="co">//we&#39;re starting at the beginning</span>
+    <span class="kw">this</span>.<span class="fu">curAnimation</span> = name; <span class="co">//change the name of the animation we&#39;re playing.</span>
+}</code></pre>
+<p>Now you can use your spritesheet to record and play multiple different animations (say a “walk”, “stand”, and “jump”) all using the same spritesheet.</p>
+<h2 id="moving-the-sprite">Moving the sprite</h2>
+<p>Now we have animations… it would be helpful to move the sprite around on our screen.</p>
+<p>First, we need variables to store the sprite’s x and y location on the screen. Put these with the rest of our Sprite.prototype attributes:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Sprite.prototype</span>.<span class="fu">x</span> = <span class="dv">0</span>;
+<span class="kw">Sprite.prototype</span>.<span class="fu">y</span> = <span class="dv">0</span>;</code></pre>
+<p>Now, let’s go to our sprite’s update method, put those new variables to use. Replace the old draw bitmap line with this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">ctx</span>.<span class="fu">drawImage</span>(<span class="kw">mySprite</span>.<span class="fu">image</span>, <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> * <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> * <span class="kw">me</span>.<span class="fu">height</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>, <span class="kw">this</span>.<span class="fu">x</span>, <span class="kw">this</span>.<span class="fu">y</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>);</code></pre>
+<p>Now when we copy our sprite over to the bitmap, instead of copying it to (0,0), we copy it over to wherever we set our sprite’s x and y properties to. We can test this fairly quickly by adding this line of code in our normal update function:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">mySprite</span>.<span class="fu">x</span> ++;</code></pre>
+<p>And now, we have our sprite moving to the right!</p>
+<h2 id="flipping-the-sprite">‘Flipping’ the sprite</h2>
+<p>We’re almost there. Oftentimes one will animate a sprite facing one direction, and need animations to face the other direction. We can make sprites that face the other direction in code as well, through some interesting canvas manipulations…</p>
+<p>First, one more property to add to our sprite prototype:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">Sprite.prototype</span>.<span class="fu">scale</span> = { <span class="dt">x</span>: <span class="dv">1</span>, <span class="dt">y</span>: <span class="dv">1</span> };</code></pre>
+<p>And, now, let’s change our drawBitmap code one last time:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">ctx</span>.<span class="fu">save</span>(); <span class="co">//save the current &#39;normal&#39;canvas state</span>
+<span class="kw">ctx</span>.<span class="fu">scale</span>(<span class="kw">me.scale</span>.<span class="fu">x</span>, <span class="kw">me.scale</span>.<span class="fu">y</span>);  <span class="co">//scale</span>
+<span class="kw">ctx</span>.<span class="fu">drawImage</span>(<span class="kw">mySprite</span>.<span class="fu">image</span>, <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">col</span> * <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">this</span>.<span class="fu">framePosition</span>.<span class="fu">row</span> * <span class="kw">me</span>.<span class="fu">height</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>, <span class="kw">this</span>.<span class="fu">scale</span>.<span class="fu">x</span> * <span class="kw">this</span>.<span class="fu">x</span>, <span class="kw">this</span>.<span class="fu">scale</span>.<span class="fu">y</span> * <span class="kw">this</span>.<span class="fu">y</span>, <span class="kw">me</span>.<span class="fu">width</span>, <span class="kw">me</span>.<span class="fu">height</span>);
+<span class="kw">ctx</span>.<span class="fu">restore</span>(); <span class="co">//go back to the &#39;normal&#39; canvas</span></code></pre>
+<p>There’s a few things going on here:</p>
+<ol style="list-style-type: decimal">
+<li>We’re changing the scale of the canvas. Normally is 1,1. We can draw a flipped image to the canvas by setting its scale to -1,1.</li>
+<li>We save the state of the canvas before changing the scale, we when we call <code>ctx.restore()</code> we return to a 1,1 scale canvas.</li>
+<li>When we draw the image, the x and y are multiplied by the scale.. else the flip would draw it on the opposite side of where it is normally at.</li>
+</ol>
+<p>Now, anytime you want to ‘flip’ the sprite horizontally, use this code:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">mySprite.scale</span>.<span class="fu">x</span> = -<span class="dv">1</span>;</code></pre>
+<p>And, to set it back</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">mySprite.scale</span>.<span class="fu">x</span> = <span class="dv">1</span>;</code></pre>
+</body>
+</html>

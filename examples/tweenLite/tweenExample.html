@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<title>TweenLite example</title>
+		<style>
+			.gItem {
+				width: 100px;
+				height: 100px;
+				float: left;
+				background: #229922;
+				margin: 2px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="gallery">
+			<div class="gItem"></div>
+			<div class="gItem"></div>
+			<div class="gItem"></div>
+			<div class="gItem"></div>
+		</div>
+		<script src="../jsLibs/jQuery.min.js"></script>
+		<script src="../jsLibs/minified/TweenLite.min.js"></script>
+		<script src="../jsLibs/minified/plugins/CSSPlugin.min.js"></script>
+		<script>
+			$(document).ready(function() {
+
+				$(".gItem").each(function(index) {
+					TweenLite.from(
+						this,
+						.7, 
+						{
+							delay: index * .1,
+							opacity: 0,
+							scale: 2
+						}
+					);
+				})
+
+		        $(".gItem")
+		        	.mouseover(function() {
+		         	   TweenLite.to(
+		            		this, 
+		            		.7, 
+		            		{ opacity: 1, scale: 1.2, rotation: 90, background: "#ff0000"}
+		            	);
+		        	})
+		        	.mouseout(function() {
+		            	TweenLite.to(
+		            		this, 
+		            		.7, 
+		            		{ opacity: .5, scale: .9, rotation: 0, background: "#FFFF00"}
+		            	);
+		        	})
+			    })
+		</script>
+	</body>
+</html>

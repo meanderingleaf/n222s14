@@ -1,0 +1,241 @@
+%Game Engines - Phaser
+
+Game Engines
+-----------------
+
+
+WebGL
+-----------------
+
+- 3D Rendering for the web
+- OpenGL
+- DirectX
+- Graphics card (or equivalent)
+- Fast!
+
+Canvas
+-----------------
+
+- Clearing pixel data
+- Redrawing all items again
+- Slower than WebGL (no hardware acceleration)
+- Supported by more browsers
+
+DOM Manipulation
+-----------------
+
+- Moving HTML elements around on the screen
+- Greatest support
+- Generally very slow
+- Allows use of DOM-focused javascript libraries (jQuery)
+
+Game Engines
+-----------------
+
+- There are a lot
+- html5gameengines.com
+
+Phaser
+-----------------
+
+- One example game engine
+- Built-in support for a lot of game-like interactions
+- (tilesheets, spritesheets, physics)
+- Default WebGL, falls back canvas
+
+Exporting Srpites for HTML Game engines
+----------------------------
+
+Texture Atlases
+---------------------------
+
+- [Why Use Sprite Atlases?](http://jessefreeman.com/game-dev/advantages-of-texture-atlases-over-sprite-sheets/)
+- Can pack textures closer
+- Can have multiple sprites use one texture
+- Load less files
+- Save space
+- Faster loading time!
+
+Animation packages
+----------------------------
+
+- Photoshop
+- GraphicsGale
+- Spriter
+- Flash
+
+Workflow
+---------------------------
+
+1. Animate in an animation package
+2. Generate sprite sheet (or texture atlas) and associated metadeta using animation
+3. Load sprite sheet into media engine
+
+Generating sprite sheets
+--------------------------
+
+- There are a few packages out there that let us generate a sprite sheet from an animation
+
+- Zoe
+- TexturePacker
+- Shoebox
+- (Built-in Flash exporter)
+
+
+Shoebox
+-------------------------
+
+- We'll be using shoebox in this course. Its free, you can get it at [http://renderhjs.net/shoebox/](http://renderhjs.net/shoebox/)
+- Adobe AIR Application (Yay flash!)
+- Drag and drop interface
+
+
+Shoebox
+---------------------------
+
+- Once you get your animation file, open shoebox
+- Drag animation file to the "Spritesheet" icon
+- Can animate in Flash (use the resulting SWF), or drop in animate GIFs
+- **important** Click "settings" and choose pixi.js for the template
+- Shoebox will create "sheet.png" and "sprites.js"
+- Rename them to something useful
+
+Back to phaser
+---------------------------
+
+- Let's learn how to use it
+
+Getting phaser
+-----------------------------
+
+- https://github.com/photonstorm/phaser
+- Click download zip
+- **OR**
+- `git clone https://github.com/photonstorm/phaser.git`
+	- Will clone into a folder called 'Phaser'
+	- Can easily be updated with fixes via `git update` when inside that folder
+
+Using Phaser
+-------------------------
+
+1. Move phaser files to working folder
+2. Link via script tag (for example, if phaser.min.js is in a folder called 'js')
+
+```
+<script src="js/phaser.min.js"></script>
+```
+
+Learning new technologies
+------------------------------
+
+- Lots of HTML5 game engines...
+- Documentation!
+- Examples!
+- https://github.com/photonstorm/phaser/tree/master/examples
+
+
+Sprite sheet breakdown
+-------------------------------
+
+- https://github.com/photonstorm/phaser/blob/master/examples/animation/sprite%20sheet.php
+- What do we see?
+- Self-executing anonymous function
+- Then... `var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create }); `
+- The line above starts the phaser engine, and stores a bunch of values in the *game* variable
+
+Preload
+--------------------------------
+
+- This function is for loading in assets
+- Referenced in the initial Phaser.Game call
+- Runs one line, that loads in a sprite sheet
+
+```{.javascript}
+game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
+```
+
+Create
+--------------------------------
+
+- This function is for setting up the game
+- Creates a sprite, adds an animation, plays the animation
+
+```{.javascript}
+var mummy = game.add.sprite(300, 200, 'mummy');
+mummy.animations.add('walk');
+mummy.animations.play('walk', 30, true);
+```
+
+Question
+------------------------------
+
+- How do we do actual gameplay though ... ?
+
+Another example
+------------------------------
+
+- This time from the sprites examples
+- https://github.com/photonstorm/phaser/blob/master/examples/sprites/sprite4.php
+
+Sprites
+------------------------------
+
+- Same Phaser.Game as before
+- Note: Uses an atlas load
+- Two new properties: update, render
+- Update: runs once per game 'tick'
+- Render: Runs when the game is being drawn
+- Also notable: can see how to do keyboard input in this example
+
+Collision
+---------------------------------
+
+- We're close! Now, how do we do collision in this engine?
+- Can actually do it multiple ways...
+	- 1 sprite versus many
+	- 1 sprite versus another
+	- many sprites versus many
+- Yep, let's look at one more example
+
+Collision (one versus many)
+----------------------------------
+
+- https://github.com/photonstorm/phaser/blob/master/examples/collision/sprite%20vs%20group.php
+- Add a sprite ( as normal )
+- Add a group
+
+```{.javascript}
+ group = game.add.group();
+```
+
+- Add sprites to that group... (`group.create`)
+
+Collision (one versus many)
+-----------------------------------
+
+- Check for the collision
+- Specify the sprite to check versus the group to check
+- Need to create a **collisionHandler** that responds to the code
+
+```{.javascript}
+game.physics.collide(sprite, group, collisionHandler, null, this);
+```
+
+Collision Handler
+----------------------------------
+
+- Two arguments: the things that collided
+
+```{.javascript}
+function collisionHandler (sprite, groupObject) {
+
+    console.log('Hit', groupObject.name);
+
+}
+```
+
+The life of the learner
+---------------------------------
+
+- This is how one goes about being a programmer
+- There is always something new to master, and you will need to find examples to quickly do so

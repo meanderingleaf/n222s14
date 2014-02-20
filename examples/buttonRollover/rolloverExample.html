@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>ROllover example</title>
+		<style>
+			#rolloverDiv {
+				width: 150px;
+				height: 100px;
+				background: url(img/buttonExample.png);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="rolloverDiv"></div>
+		<script src="../jsLibs/jQuery.min.js"></script>
+		<script>
+			$(document).ready(function() {
+
+				$("#rolloverDiv")
+					.mouseover(function() {
+						$(this).css("backgroundPosition", "0 100px");
+					})
+					.mouseout(function() {
+						$(this).css("backgroundPosition", "0 0");
+					})
+
+			})
+		</script>
+	</body>
+</html>

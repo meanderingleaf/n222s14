@@ -1,0 +1,375 @@
+Spritesheets, canvas, javascript
+===============================
+
+How about some #hashtags with that #amazing #title. (Isn't the future great? I can just imagine the "Declaration of #Independance").
+
+Spritesheets are a way of storing, and reproducing animated elements inside of many media applications. They look like this:
+
+![](img/sheet.png)
+
+Just in case this is a bit confusing, here is another representation of how the sheet is laid out (and what the computer thinks of it:)
+
+![](img/sheet_grid.jpg)
+
+
+In this particular spritesheet, we have **6 frames** of animation. The frames are stacked right next to each other, always taking up a set width and height.
+
+An interactive media engine that uses a spritesheet will load up the whole image, but only show data from one of those particular frames. This is a method that is somtimes called *blitting*, or copying data from one bitmat to another at a fairly fast rate. Let's get started making a Javascript 'class' that can handle spritesheets for us. We're going to pass in the basic information it needs to know - the width and height of the sprite, and the image to use as the spritesheet.
+
+
+```{.javascript}
+
+function Sprite(sheetUrl, swidth, sheight) {
+
+	//get a persistent reference to this particular object
+	var me = this;
+    
+    //save the width and height of the sprite
+    this.width = swidth;
+    this.height = sheight;
+
+    //create a new image, begin to load it
+    this.image = new Image();
+    this.image.src = sheetUrl;
+    
+}
+
+```
+
+Note that we use the "me" in this case, to make sure we are referencing the current object we are using. This will happen in other parts of the code. For the most part, "me" and "this" are interoperable (but not always!).
+
+Adding the canvas
+--------------------------------------------------------
+
+Okay, we will return to our sprite code in a bit. First, we need some way to display it. We're going to add a canvas to our code. Inside the body of your html, add this tag:
+
+```{.html}
+<canvas id="myCanv" width="400" height="300"></canvas>
+```
+
+And then, in our javascript tag, let's add an init function, and get our canvas setup:
+
+```{.javascript}
+ var ctx;
+
+function init() {
+    
+    //get the canvas
+    var canvas = document.getElementById("myCanv");
+    
+    //store the context to draw into:
+    ctx = canvas.getContext('2d');
+  
+}
+```
+
+Great, now we have a canvas, and a context that we can use to draw into it. Let's draw our sprite.
+
+
+Animation code
+-------------------------------------------------
+
+Before we go much first, go ahead and download the first spritesheet above, and put it inside a folder beneath your root XML named "assets". Make sure the spritesheet is called "sheet.png".
+
+We need some way to run some function on a reliable delay. HTML5 provides one approach using the `requestAnimationFrame` function. Here's how to get it set up. We'll also be getting our sprite setup as we go along.
+
+First, up where you defined your canvas context, we're going to add a variable for your sprite:
+
+```{.javascript}
+var ctx, mySprite;
+```
+
+Next, inside your init function, add this code:
+
+```{.javascript}
+mySprite = new Sprite("assets/sheet.png, 32, 65");
+requestAnimationFrame(update);
+```
+
+Then, outside of that function, make the update function. It _must_ run the line at the bottom, or the function will only be called once.
+
+```{.javascript}
+function update() {
+    ctx.clearRect(0,0,400,300);
+
+    mySprite.update();
+
+    requestAnimationFrame(update);
+}
+```
+
+Notice the `ctx.clearRect(0,0,400,300);`? Without that line, we wouldn't get individual animation frames, but instead it would draw the new stuff over the old stuff (like painting over an already existing painting). This way, we will only see what we draw to the canvas each frame.
+
+Secondly, there is a `mySprite.update();`. We're going to make that right now...
+
+Drawing one frame of a sprite
+------------------------------------------------
+
+Let's return to our sprite function, and draw just the first frame, for starters. (Oh yes, it will get more complex. But one stetp at a time.) Inside your load event handler, add this line of code:
+
+
+```{.javascript}
+this.update = function() {
+	 ctx.drawImage(me.image, 0, 0, me.width, me.height, 0, 0, me.width, me.height);
+}
+```
+
+Yep, that is the same line of code you ran before, but now it is being done 30 times a second. Yeah! Waste that power!
+
+Getting setup to draw multiple frames
+---------------------------------------
+
+Now things are going to get a bit more complex. We're going to start drawing multiple frames. In order to do this, we're going to need to store a few variables in our Sprite class. Let's add them to the prototype (put this stuff outside of the Sprite function.... right beneath it works well.)
+
+```{.javascript}
+Sprite.prototype.curFrame = 0;
+Sprite.prototype.dCount = 0;
+Sprite.prototype.delay = 10;
+Sprite.prototype.framePosition = { row:0, col: 0};
+```
+
+Go inside the sprite function. We're going to write a load even handler for the image. This handler will calculate the number of rows and columns in this particular spritesheet based on the width and height you specified the sprite as:
+
+```{.javascript}
+
+this.image.addEventListener("load", function() {
+    //calc number of frames per line
+    me.perLine = Math.floor( me.image.width / swidth );
+    //calc number of lines
+    me.rows = Math.floor( me.image.height / sheight );
+});
+
+```
+
+Great. Now we know the rows and columns of the sprite.
+
+
+Drawing multiple frames
+---------------------------------------
+
+Its going to get a bit math-y for a second. Replace the code inside your sprite.update function with this:
+
+```{.javascript}
+this.dCount ++;
+if(this.dCount > this.delay) {
+    this.curFrame ++;
+    this.dCount = 0;
+    
+    if(this.curFrame > 5) {
+        this.curFrame = 0;
+    }
+    
+    this.framePosition.row = Math.floor( this.curFrame / me.cols );
+    this.framePosition.col = this.curFrame % me.cols;
+}
+
+ctx.drawImage(this.image, 
+  this.framePosition.row * this.width, 
+  this.framePosition.col * this.height,
+  this.width,this.height,
+  100,0,this.width,this.height);
+
+```
+
+Let's break this down, line-by-line:
+
+```{.javascript}
+this.dCount ++;
+
+if(this.dCount > this.delay) {
+	this.curFrame ++;
+	this.dCount = 0;
+}
+```
+
+This snippet adds a delay between switching frames. If we didn't have our delay (set to 10 in our prototype), the sprite would be animated so fast we couldn't see the transitions well.
+
+```{.javascript}
+if(this.curFrame > 5) {
+    this.curFrame = 0;
+}
+```
+
+Resets the frame to play, if we're beyond visible frames.
+
+Speaking of frames, here they are...
+
+![](img/sheet_indices.png)
+
+*Now* we need to find a way to figure out what x,y coordinate corresponds with the top left corner of the frame we are on. This gets a bit complex. First we figure out the current row and column our frame relates to. Here's the lines for this:
+
+```{.javascript}
+this.framePosition.row = Math.floor( this.curFrame / me.cols );
+this.framePosition.col = this.curFrame % me.cols;
+```
+
+So, lets do the math quickly. Let's say curFrame is 0:
+
+* row = 0 / 2 = 0 (rounded down) = **0**
+* col = 0 % 2 = **0** (remainder)
+
+
+Let's say curFrame = 1:
+
+* row = 1/2 = .5 (rounded down) = **0**
+* col = 1 % 2 = **1** remainder
+
+
+Let's say curFrame = 2:
+
+* row = 2/2 = 1 (rounded down) = **1**
+* col = 2 % 2 = **0** remainder
+
+
+And so on. (Here's a visual)
+
+![](img/sheet_grid_exp.png)
+
+In other words, if we lay out our sprite sheets like this, and we know the number of rows and columns that our spritesheet has, we can easily cacluclate our **current row** by dividing the current frame number by the number of columns, and always rounding down. We can also easily calculate our **current col** by getting the remainder our frame's number devided by our total columns.
+
+Okay, so with the math-y stuff over, let's put this to use. You can see that our drawImage has changed a bit:
+
+```{.javascript}
+
+ctx.drawImage(this.image, 
+  this.framePosition.row * this.width, 
+  this.framePosition.col * this.height,
+  this.width,this.height,
+  100,0,this.width,this.height);
+
+```
+
+Since we know our current row and column, we only need to multiply those by the sprite's width and height to get the starting x and y location for our spritesheet copy method.
+
+Once we have all this code in, we have animation! But... its not tremendously configurable. In fact, with the given sprite sheet, we don't even have a walk cycle! Its time to fix that.
+
+
+Enabling multiple animations
+-----------------------------------
+
+In order to have multiple, unique animations we need some way to store the different sets of frames to play. We're going to do that by storing arrays of the frames... in an array. Add these lines beneath your Sprite object function to get this started:
+
+```{.javascript}
+
+Sprite.prototype.curAnimation = ""; //current animation playing
+Sprite.prototype.animations = []; //array of all possible animations
+
+//takes an animation name, and an array of frames to play in the animation
+//registers it in our animations array
+ Sprite.prototype.addAnimation = function(name, frames) {
+    this.animations[name] = frames;
+}
+
+```
+
+Great, now have have 1) a way to store different animations (as an array of frame #'s inside an object) 2)  a way to store which is the "current" animation and 3) a way to add new animations to our sprite.
+
+We need to change our animation code a bit to make use of these new variables. Change the frame manipulation portion of your sprite.update method to have this code:
+
+```{.javascript}
+
+ this.dcount ++;
+if(this.dcount >= this.delay) {
+    this.dcount = 0;
+    this.curFrame ++;
+    
+    //if we're at the end of our current frames for this animation, go back to the start
+    if(this.curFrame >= me.animations[me.curAnimation].length) {
+        this.curFrame = 0;
+    }
+    
+    //set row & col position
+    //using the frame number stored in our animation's current index
+    this.framePosition.row = Math.floor( me.animations[me.curAnimation][me.curFrame] / me.perLine );
+    this.framePosition.col = me.animations[me.curAnimation][me.curFrame] % me.perLine;
+}
+
+
+```
+
+Before, we were just flying through every frame inside our spritesheet, and assuming that our 'curFrame' was the index of the sprite image we wanted to display. Now, curFrame is used to tell us which frame in our animation array. We then use that number to set the from position's row and column.
+
+Let's go ahead and set up one animation. Up inside your init function, right after you make the sprite:
+
+```{.javascript}
+mySprite.addAnimation("walk", [4,5,0,3,5,1]);
+mySprite.play("walk");
+```
+
+This registers a walk animation in our array, and tells the sprite that it is to play frames 4,5,0,3,5,1 in order to show that particular animation. Finally, we need a way to actually play that animation. Let's add one more method to our sprite's prototype (you can see that we've already used it above):
+
+```{.javascript}
+Sprite.prototype.play =  function(name) {
+    this.dcount = this.delay; //force animation to restart
+    this.curFrame = 0; //we're starting at the beginning
+    this.curAnimation = name; //change the name of the animation we're playing.
+}
+```
+
+Now you can use your spritesheet to record and play multiple different animations (say a "walk", "stand", and "jump") all using the same spritesheet.
+
+
+Moving the sprite
+--------------------------------------------
+
+Now we have animations... it would be helpful to move the sprite around on our screen.
+
+First, we need variables to store the sprite's x and y location on the screen. Put these with the rest of our Sprite.prototype attributes:
+
+```{.javascript}
+Sprite.prototype.x = 0;
+Sprite.prototype.y = 0;
+```
+
+Now, let's go to our sprite's update method, put those new variables to use. Replace the old draw bitmap line with this:
+
+```{.javascript}
+ctx.drawImage(mySprite.image, this.framePosition.col * me.width, this.framePosition.row * me.height, me.width, me.height, this.x, this.y, me.width, me.height);
+```
+
+Now when we copy our sprite over to the bitmap, instead of copying it to (0,0), we copy it over to wherever we set our sprite's x and y properties to.  We can test this fairly quickly by adding this line of code in our normal update function:
+
+```{.javascript}
+mySprite.x ++;
+```
+
+And now, we have our sprite moving to the right!
+
+'Flipping' the sprite
+-------------------------------------------
+
+We're almost there. Oftentimes one will animate a sprite facing one direction, and need animations to face the other direction. We can make sprites that face the other direction in code as well, through some interesting canvas manipulations...
+
+First, one more property to add to our sprite prototype:
+
+```{.javascript}
+Sprite.prototype.scale = { x: 1, y: 1 };
+```
+
+And, now, let's change our drawBitmap code one last time:
+
+```{.javascript}
+ctx.save(); //save the current 'normal'canvas state
+ctx.scale(me.scale.x, me.scale.y);  //scale
+ctx.drawImage(mySprite.image, this.framePosition.col * me.width, this.framePosition.row * me.height, me.width, me.height, this.scale.x * this.x, this.scale.y * this.y, me.width, me.height);
+ctx.restore(); //go back to the 'normal' canvas
+```
+
+There's a few things going on here:
+
+1. We're changing the scale of the canvas. Normally is 1,1. We can draw a flipped image to the canvas by setting its scale to -1,1.
+2. We save the state of the canvas before changing the scale, we when we call `ctx.restore()` we return to a 1,1 scale canvas.
+3. When we draw the image, the x and y are multiplied by the scale.. else the flip would draw it on the opposite side of where it is normally at.
+
+
+Now, anytime you want to 'flip' the sprite horizontally, use this code:
+
+```{.javascript}
+mySprite.scale.x = -1;
+```
+
+And, to set it back
+
+```{.javascript}
+mySprite.scale.x = 1;
+```

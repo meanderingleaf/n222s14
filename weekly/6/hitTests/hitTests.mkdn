@@ -1,0 +1,6 @@
+% hitTests
+
+Hit tests
+-------------------
+
+Hit tests really are not that hard, they're just a pain.
