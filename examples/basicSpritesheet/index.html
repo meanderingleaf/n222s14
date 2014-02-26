@@ -1,0 +1,58 @@
+<html>
+	<head>
+
+	</head>
+	<body>
+
+		<canvas width="800" height="600" id="myCanvas"></canvas>
+
+		<script>
+
+	    	//get the canvas
+		    var canvas = document.getElementById("myCanvas");
+		    //store the context to draw into:
+		    var ctx = canvas.getContext('2d');
+
+		    var mySprite = new Sprite("sheet.png", 32, 65);
+		 
+		 	requestAnimationFrame(update);
+
+		 	function update() {
+		 		ctx.clearRect(0,0,800,600);
+		 		mySprite.update();
+		 		mySprite.x ++;
+		 		requestAnimationFrame(update);
+		 	}
+
+			//make a spritesheet 'class'
+			function Sprite(sheetUrl, swidth, sheight) {
+
+				//save this context
+				var me = this;
+
+				//position
+				this.x = 0;
+				this.y = 0;
+
+				this.width = swidth;
+				this.height = sheight;
+
+				//make a new image
+				console.log(sheetUrl)
+				this.image = new Image();
+				this.image.src = sheetUrl;
+
+				//method, to update
+				this.update = function() {
+					console.log(me.width);
+					ctx.drawImage(me.image, 
+									0, 64,
+									me.width, me.height,
+									me.x,me.y,
+									me.width, me.height
+									);
+				}
+			}
+		</script>
+	</body>
+</html>

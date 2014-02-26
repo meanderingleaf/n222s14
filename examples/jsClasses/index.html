@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title>A bit about 'classes'</title>
+	</head>
+	<body>
+		<script>
+
+			//'class'
+			function Car() {
+				//properties
+				this.numWheels = 4;
+				this.color = "Red";
+				this.model= "S-10";
+
+				//method
+				this.drive = function() {
+					console.log("The " + this.color + " " + this.model + " is driving!");
+				}
+			}
+
+			function Truck() {
+				//property
+				this.haulingCapacity = 10;
+				this.model = "F-150";
+				this.model = "Duck";
+			}
+
+			Truck.prototype= new Car();
+			var truckInstance = new Truck();
+			console.log(truckInstance)
+			//call the drive method
+			truckInstance.color = "Green";
+			truckInstance.drive();
+
+			//make a new car, store it in car instance
+			var carInstance = new Car();
+			var secondCarInstance = new Car();
+			console.log(carInstance);
+			console.log(secondCarInstance);
+			console.log(carInstance.numWheels);
+
+		</script>
+	</body>
+</html>
