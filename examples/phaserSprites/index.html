@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<script src="phaser.min.js"></script>
+		<script>
+			var game = new Phaser.Game(800, 600, 
+							Phaser.AUTO, '', 
+							{ 
+								preload: preload, 
+								create: create,
+								update: update
+							}
+						);
+
+			var mySprite;
+			var sprites = [];
+
+			function preload() {
+				game.load.image('myImage', 'image.jpg');
+			}
+
+			function create() {
+				//mySprite = game.add.sprite(100,100, 'myImage');
+			}
+
+			function update() {
+
+				if(Math.random() < .02) {
+					var newSprite = game.add.sprite(
+										Math.random()*800,0, 
+										'myImage'
+									);
+
+					sprites.push(newSprite);
+				}
+
+				for(var i = 0; i < sprites.length; i++) {
+					sprites[i].y++;
+				}
+			}
+
+		</script>
+	</head>
+	<body>
+
+	</body>
+</html>
