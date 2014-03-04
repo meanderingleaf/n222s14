@@ -13,19 +13,36 @@
 
 			var mySprite;
 			var sprites = [];
+			var player;
+			var coins;
+			var cursors;
 
 			function preload() {
-				game.load.image('myImage', 'image.jpg');
+				game.load.image('myImage', 'img/coin.png');
+
+				//load in a sprite sheet
+				game.load.spritesheet('playerSprite', 'sprites/sprites.png', 30, 64, 6);
 			}
 
 			function create() {
 				//mySprite = game.add.sprite(100,100, 'myImage');
+				player = game.add.sprite(400, 500, "playerSprite");
+				//player.animations.add('standard'); //lazy way
+
+				//another way to add animations
+				player.animations.add('standard', [0,1,2,3]); 
+				//player.animations.add('jump', [6,5]);
+				player.animations.play('standard', 10, true);
+										//anim to play, fps, loops?
+
+				coins = game.add.group();
+				cursors = game.input.keyboard.createCursorKeys();
 			}
 
 			function update() {
-
+			
 				if(Math.random() < .02) {
-					var newSprite = game.add.sprite(
+					var newSprite = coins.create(
 										Math.random()*800,0, 
 										'myImage'
 									);
@@ -33,9 +50,24 @@
 					sprites.push(newSprite);
 				}
 
+				if(cursors.left.isDown) {
+					player.body.velocity.x = -200;
+				}
+
+
+				if(cursors.right.isDown) {
+					player.body.velocity.x = 200;
+				}
+
 				for(var i = 0; i < sprites.length; i++) {
 					sprites[i].y++;
 				}
+
+				game.physics.collide(player, coins, collisionHandler);
+			}
+
+			function collisionHandler(playerRef, coinRef) {
+				coinRef.kill();
 			}
 
 		</script>
