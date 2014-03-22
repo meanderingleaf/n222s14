@@ -147,7 +147,6 @@ Click on the 'new repo' button on the Github web interface
 
 ![New repo button](img/newGit.png)
 
-
 Fill in the repo name, click create
 
 ![New repo info](img/newRep2.png)
@@ -157,9 +156,10 @@ Take note of the git repo's URL:
 ![New repo info](img/newRep3.png)
 
 
-
 Getting that repo onto your computer
 -------------------------------------------
+
+![New repo info](img/cloning.png)
 
 - Click on clone/new
 - Paste in the git repo's URL
