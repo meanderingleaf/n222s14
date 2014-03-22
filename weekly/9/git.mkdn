@@ -150,11 +150,11 @@ Click on the 'new repo' button on the Github web interface
 
 Fill in the repo name, click create
 
-![New repo info](img/newGit.png)
+![New repo info](img/newRep2.png)
 
 Take note of the git repo's URL:
 
-![New repo info](img/newGit.png)
+![New repo info](img/newRep3.png)
 
 
 
