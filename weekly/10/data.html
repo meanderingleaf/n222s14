@@ -1,0 +1,491 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Data handling in Javascript</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">Data handling in Javascript</h1>
+</div>
+<h2 id="json">JSON</h2>
+<ul>
+<li><strong>JSON</strong> is the primary data exchange format</li>
+<li>Short for <em>Javascript Object Notation</em></li>
+<li>It probably looks very familiar</li>
+<li>Very compact data format</li>
+</ul>
+<h2 id="json-example">JSON Example</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    <span class="st">&quot;school&quot;</span>: <span class="st">&quot;informatics&quot;</span>,
+    <span class="st">&quot;people&quot;</span>: [ <span class="st">&quot;dave&quot;</span>, <span class="st">&quot;josh&quot;</span>, <span class="st">&quot;amy&quot;</span> ],
+    <span class="st">&quot;meta&quot;</span>: {
+        <span class="st">&quot;time&quot;</span>: <span class="st">&quot;now&quot;</span>,
+        <span class="st">&quot;play&quot;</span>: <span class="st">&quot;here&quot;</span>
+    }
+}</code></pre>
+<h2 id="json-1">JSON</h2>
+<ul>
+<li>Reads just like a Javascript object</li>
+<li>Key: value pairs</li>
+</ul>
+<h2 id="json---properties">JSON - Properties</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    <span class="st">&quot;myName&quot;</span>: <span class="st">&quot;Jake&quot;</span>
+}</code></pre>
+<h2 id="json---arrays">JSON - Arrays</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    
+    <span class="st">&quot;art&quot;</span>: [ <span class="st">&quot;Monet&quot;</span>, <span class="st">&quot;Rembrant&quot;</span>, <span class="st">&quot;Jo&quot;</span> ]
+}</code></pre>
+<h2 id="json---objects">JSON - Objects</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    <span class="st">&quot;chair&quot;</span>: {
+        <span class="st">&quot;wheels&quot;</span>: <span class="dv">5</span>,
+        <span class="st">&quot;color&quot;</span>: <span class="st">&quot;red&quot;</span>,
+        <span class="st">&quot;pivots&quot;</span>: <span class="kw">true</span>
+    }
+}</code></pre>
+<h2 id="json---objects-in-objects">JSON - Objects in objects</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    <span class="st">&quot;pokemon&quot;</span>: {
+        <span class="st">&quot;grass&quot;</span>: {
+            <span class="st">&quot;favorite&quot;</span>: <span class="st">&quot;Venosaur&quot;</span>
+        }
+    }
+}</code></pre>
+<h2 id="targeting">Targeting</h2>
+<ul>
+<li>Getting a value out of an object</li>
+<li>Assuming the object before is called &quot;myPokemon&quot;</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">myPokemon.pokemon.grass</span>.<span class="fu">favorite</span>; <span class="co">//Venosaur</span></code></pre>
+<h2 id="using-json-data">Using JSON Data</h2>
+<ul>
+<li>Create a JSON file (extension .json)</li>
+<li>Load the file in via AJAX</li>
+<li>Parse it</li>
+<li><strong>Turns into a native javascript object</strong></li>
+</ul>
+<h2 id="json.parse">JSON.parse</h2>
+<ul>
+<li>Take a string that contains valid JSON</li>
+<li>Turns it into a javascript object</li>
+<li>In jQuery, its <code>$.parseJSON</code></li>
+</ul>
+<h2 id="getjson">getJSON</h2>
+<ul>
+<li>Alternatively, in jQuery, use th <code>getJson</code> method</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">$.<span class="fu">getJSON</span>( <span class="st">&quot;ajax/test.json&quot;</span>, <span class="kw">function</span>( data ) {
+    <span class="co">//data is a javascript object with the loaded data</span>
+    
+ );</code></pre>
+<h2 id="when-to-use-external-data">When to use external data</h2>
+<ul>
+<li>Anytime your app needs to be dynamic</li>
+<li>Passing data from one service to another</li>
+<li>SQL -&gt; PHP -&gt; (outputs) -&gt; JSON -&gt; (loads) -&gt; Javascript</li>
+</ul>
+<h2 id="json-example-1">JSON Example</h2>
+<ul>
+<li>Music library</li>
+<li>Everyone has own musical taste</li>
+<li>Still can use the same music player</li>
+</ul>
+<h2 id="example-json-music-library">Example JSON Music library</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">{
+    
+    <span class="st">&quot;albums&quot;</span>: {
+        [
+            {
+                <span class="st">&quot;title&quot;</span>: <span class="st">&quot;The Else&quot;</span>, 
+                <span class="st">&quot;artist&quot;</span>: <span class="st">&quot;They Might Be Giants&quot;</span>,
+                <span class="st">&quot;date&quot;</span>: <span class="st">&quot;2007&quot;</span>,
+                <span class="st">&quot;tracks&quot;</span>: [
+                    <span class="st">&quot;I&#39;m Impressed&quot;</span>,
+                    <span class="st">&quot;The Mesopotamians&quot;</span>
+                ]
+            },
+            {
+                <span class="st">&quot;title&quot;</span>: <span class="st">&quot;Nanobots&quot;</span>,
+                <span class="st">&quot;artist&quot;</span>: <span class="st">&quot;They Might Be Giants&quot;</span>,
+                <span class="st">&quot;date&quot;</span>: <span class="st">&quot;2013&quot;</span>,
+                <span class="st">&quot;tracks&quot;</span>: [
+                    <span class="st">&quot;You&#39;re on Fire&quot;</span>,
+                    <span class="st">&quot;Nanobots&quot;</span>
+                ]
+
+            }
+    }
+}</code></pre>
+<h2 id="example---displaying-data">Example - Displaying data</h2>
+<ul>
+<li>Assumes you are using jQuery, file is <code>music.json</code></li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">$.<span class="fu">getJSON</span>( <span class="st">&quot;ajax/test.json&quot;</span>, <span class="kw">function</span>( data ) {
+    <span class="co">//data is a javascript object with the loaded data</span>
+    <span class="co">//loop through data</span>
+
+    <span class="kw">for</span>(<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">data.albums</span>.<span class="fu">length</span>; i++) {
+        $(<span class="st">&quot;listDiv&quot;</span>).<span class="fu">append</span>(<span class="st">&quot;&lt;li&gt;&quot;</span> + data[i].<span class="fu">title</span> + <span class="st">&quot;&lt;/li&gt;&quot;</span>);
+    }
+    
+);</code></pre>
+<h2 id="example---linking-data-to-the-dom-storing-data">Example - Linking data to the DOM, storing data</h2>
+<ul>
+<li>Add a &quot;data&quot; attribute to the tag</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> albums; <span class="co">//to store the variables</span>
+
+$.<span class="fu">getJSON</span>( <span class="st">&quot;ajax/test.json&quot;</span>, <span class="kw">function</span>( data ) {
+    <span class="co">//data is a javascript object with the loaded data</span>
+    <span class="co">//loop through data</span>
+    albums = data;
+    <span class="kw">for</span>(<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">data.albums</span>.<span class="fu">length</span>; i++) {
+        $(<span class="st">&quot;listDiv&quot;</span>).<span class="fu">append</span>(<span class="st">&quot;&lt;li data-index=&#39;&quot;</span>+ i +<span class="st">&quot;&#39;&gt;&quot;</span> + data[i].<span class="fu">title</span> + <span class="st">&quot;&lt;/li&gt;&quot;</span>);
+    }
+    
+);</code></pre>
+<h2 id="example---adding-click">Example - Adding click</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> albums; <span class="co">//to store the variables</span>
+$.<span class="fu">getJSON</span>( <span class="st">&quot;ajax/test.json&quot;</span>, <span class="kw">function</span>( data ) {
+    <span class="co">//data is a javascript object with the loaded data</span>
+    <span class="co">//loop through data</span>
+    albums = data;
+    <span class="kw">for</span>(<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">data.albums</span>.<span class="fu">length</span>; i++) {
+        $(<span class="st">&quot;listDiv&quot;</span>).<span class="fu">append</span>(<span class="st">&quot;&lt;li class=&#39;album&#39; data-index=&#39;&quot;</span>+ i +<span class="st">&quot;&#39;&gt;&quot;</span> + data[i].<span class="fu">title</span> + <span class="st">&quot;&lt;/li&gt;&quot;</span>);
+    }
+
+    $(<span class="st">&quot;.album&quot;</span>).<span class="fu">click</span>(<span class="kw">function</span>() {
+
+        <span class="kw">var</span> clickedItem = $(<span class="kw">this</span>);
+    });
+    
+);</code></pre>
+<h2 id="example---gettin-extra-information-about-the-album-of-the-clicked-item">Example - Gettin extra information about the album of the clicked item</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> albums; <span class="co">//to store the variables</span>
+$.<span class="fu">getJSON</span>( <span class="st">&quot;ajax/test.json&quot;</span>, <span class="kw">function</span>( data ) {
+    <span class="co">//data is a javascript object with the loaded data</span>
+    <span class="co">//loop through data</span>
+    albums = data;
+    <span class="kw">for</span>(<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">data.albums</span>.<span class="fu">length</span>; i++) {
+        $(<span class="st">&quot;listDiv&quot;</span>).<span class="fu">append</span>(<span class="st">&quot;&lt;li class=&#39;album&#39; data-index=&#39;&quot;</span>+ i +<span class="st">&quot;&#39;&gt;&quot;</span> + data[i].<span class="fu">title</span> + <span class="st">&quot;&lt;/li&gt;&quot;</span>);
+    }
+
+    $(<span class="st">&quot;.album&quot;</span>).<span class="fu">click</span>(<span class="kw">function</span>() {
+
+        <span class="kw">var</span> clickedItem = $(<span class="kw">this</span>);
+        <span class="kw">var</span> index = <span class="kw">clickedItem</span>.<span class="fu">data</span>(<span class="st">&quot;index&quot;</span>);
+        <span class="kw">var</span> album = albums[index];
+        <span class="kw">console</span>.<span class="fu">log</span>(<span class="kw">album</span>.<span class="fu">artist</span>);
+    });
+);</code></pre>
+<h2 id="open-dataapis">Open Data/APIs</h2>
+<ul>
+<li>Lots of sites expose their data for other developers</li>
+<li>NWS</li>
+<li>Youtube</li>
+<li>Twitter</li>
+<li>Flickr</li>
+</ul>
+<h2 id="reading-data">Reading Data</h2>
+<ul>
+<li>Let's read something difficult</li>
+<li>NWS Weather data</li>
+</ul>
+<h2 id="nws-weather-data">NWS Weather Data</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+{
+    <span class="st">&quot;operationalMode&quot;</span>:<span class="st">&quot;&quot;</span>,
+    <span class="st">&quot;srsName&quot;</span>:<span class="st">&quot;WGS 1984&quot;</span>,
+    <span class="st">&quot;creationDate&quot;</span>:<span class="st">&quot;2013-10-24T15:56:26-04:00&quot;</span>,
+    <span class="st">&quot;creationDateLocal&quot;</span>:<span class="st">&quot;24 Oct 15:54 pm EDT&quot;</span>,
+    <span class="st">&quot;productionCenter&quot;</span>:<span class="st">&quot;Indianapolis, IN&quot;</span>,
+    <span class="st">&quot;credit&quot;</span>:<span class="st">&quot;http://www.crh.noaa.gov/ind&quot;</span>,
+    <span class="st">&quot;moreInformation&quot;</span>:<span class="st">&quot;http://weather.gov&quot;</span>,
+    <span class="st">&quot;location&quot;</span>:{
+        <span class="st">&quot;latitude&quot;</span>:<span class="st">&quot;39.97&quot;</span>,
+        <span class="st">&quot;longitude&quot;</span>:<span class="st">&quot;-86.17&quot;</span>,
+        <span class="st">&quot;elevation&quot;</span>:<span class="st">&quot;899&quot;</span>,
+        <span class="st">&quot;wfo&quot;</span>:<span class="st">&quot;IND&quot;</span>,
+        <span class="st">&quot;timezone&quot;</span>:<span class="st">&quot;E|Y|5&quot;</span>,
+        <span class="st">&quot;areaDescription&quot;</span>:<span class="st">&quot;3 Miles W Carmel IN&quot;</span>,
+        <span class="st">&quot;radar&quot;</span>:<span class="st">&quot;kind&quot;</span>,
+        <span class="st">&quot;zone&quot;</span>:<span class="st">&quot;INZ039&quot;</span>,
+        <span class="st">&quot;county&quot;</span>:<span class="st">&quot;INC057&quot;</span>,
+        <span class="st">&quot;firezone&quot;</span>:<span class="st">&quot;INZ039&quot;</span>,
+        <span class="st">&quot;metar&quot;</span>:<span class="st">&quot;KIND&quot;</span>
+    },
+    <span class="st">&quot;time&quot;</span>:{
+        <span class="st">&quot;layoutKey&quot;</span>:<span class="st">&quot;k-p12h-n13-1&quot;</span>,
+        <span class="st">&quot;startPeriodName&quot;</span>:[
+            <span class="st">&quot;This Afternoon&quot;</span>,
+            <span class="st">&quot;Tonight&quot;</span>,
+            <span class="st">&quot;Friday&quot;</span>,
+            <span class="st">&quot;Friday Night&quot;</span>,
+            <span class="st">&quot;Saturday&quot;</span>,
+            <span class="st">&quot;Saturday Night&quot;</span>,
+            <span class="st">&quot;Sunday&quot;</span>,
+            <span class="st">&quot;Sunday Night&quot;</span>,
+            <span class="st">&quot;Monday&quot;</span>,
+            <span class="st">&quot;Monday Night&quot;</span>,
+            <span class="st">&quot;Tuesday&quot;</span>,
+            <span class="st">&quot;Tuesday Night&quot;</span>,
+            <span class="st">&quot;Wednesday&quot;</span>     
+        ],
+        <span class="st">&quot;startValidTime&quot;</span>:[
+            <span class="st">&quot;2013-10-24T12:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-24T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-25T06:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-25T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-26T06:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-26T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-27T06:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-27T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-28T06:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-28T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-29T06:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-29T18:00:00-04:00&quot;</span>,
+            <span class="st">&quot;2013-10-30T06:00:00-04:00&quot;</span> 
+        ],
+        <span class="st">&quot;tempLabel&quot;</span>:[<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>,<span class="st">&quot;Low&quot;</span>,<span class="st">&quot;High&quot;</span>]
+    },
+    <span class="st">&quot;data&quot;</span>:{
+        <span class="st">&quot;temperature&quot;</span>:[<span class="st">&quot;40&quot;</span>,<span class="st">&quot;29&quot;</span>,<span class="st">&quot;48&quot;</span>,<span class="st">&quot;31&quot;</span>,<span class="st">&quot;55&quot;</span>,<span class="st">&quot;33&quot;</span>,<span class="st">&quot;53&quot;</span>,<span class="st">&quot;35&quot;</span>,<span class="st">&quot;57&quot;</span>,<span class="st">&quot;41&quot;</span>,<span class="st">&quot;58&quot;</span>,<span class="st">&quot;47&quot;</span>,<span class="st">&quot;58&quot;</span>],       
+        <span class="st">&quot;pop&quot;</span>:[null,null,null,null,null,null,null,null,null,null,<span class="st">&quot;30&quot;</span>,<span class="st">&quot;40&quot;</span>,<span class="st">&quot;40&quot;</span>],
+
+        <span class="st">&quot;weather&quot;</span>:[
+            <span class="st">&quot;Cloudy&quot;</span>,
+            <span class="st">&quot;Mostly Cloudy&quot;</span>,
+            <span class="st">&quot;Sunny&quot;</span>,
+            <span class="st">&quot;Mostly Clear&quot;</span>,
+            <span class="st">&quot;Mostly Sunny&quot;</span>,
+            <span class="st">&quot;Partly Cloudy&quot;</span>,
+            <span class="st">&quot;Sunny&quot;</span>,
+            <span class="st">&quot;Mostly Clear&quot;</span>,
+            <span class="st">&quot;Mostly Sunny&quot;</span>,
+            <span class="st">&quot;Partly Cloudy&quot;</span>,
+            <span class="st">&quot;Chance Showers&quot;</span>,
+            <span class="st">&quot;Chance Showers&quot;</span>,
+            <span class="st">&quot;Chance Showers&quot;</span>
+            ],
+        <span class="st">&quot;iconLink&quot;</span>:[
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/ovc.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nbkn.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/few.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nfew.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/sct.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nsct.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/few.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nfew.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/sct.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nsct.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/shra30.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/nshra40.png&quot;</span>,
+            <span class="st">&quot;http://forecast.weather.gov/images/wtf/medium/shra40.png&quot;</span>
+            ],
+        <span class="st">&quot;hazard&quot;</span>:[
+
+            ],
+        <span class="st">&quot;hazardUrl&quot;</span>:[
+
+            ],
+        <span class="st">&quot;text&quot;</span>:[
+            <span class="st">&quot;Cloudy, with a steady temperature around 40. West northwest wind around 8 mph. &quot;</span>,
+            <span class="st">&quot;Mostly cloudy, with a low around 29. West northwest wind around 7 mph. &quot;</span>,
+            <span class="st">&quot;Sunny, with a high near 48. West northwest wind 5 to 9 mph. &quot;</span>,
+            <span class="st">&quot;Mostly clear, with a low around 31. South southwest wind 6 to 8 mph. &quot;</span>,
+            <span class="st">&quot;Mostly sunny, with a high near 55. South southwest wind 10 to 17 mph, with gusts as high as 23 mph. &quot;</span>,
+            <span class="st">&quot;Partly cloudy, with a low around 33.&quot;</span>,
+            <span class="st">&quot;Sunny, with a high near 53.&quot;</span>,
+            <span class="st">&quot;Mostly clear, with a low around 35.&quot;</span>,
+            <span class="st">&quot;Mostly sunny, with a high near 57.&quot;</span>,
+            <span class="st">&quot;Partly cloudy, with a low around 41.&quot;</span>,
+            <span class="st">&quot;A 30 percent chance of showers.  Partly sunny, with a high near 58.&quot;</span>,
+            <span class="st">&quot;A 40 percent chance of showers.  Mostly cloudy, with a low around 47.&quot;</span>,
+            <span class="st">&quot;A 40 percent chance of showers.  Cloudy, with a high near 58.&quot;</span>         ]
+        },
+        <span class="st">&quot;currentobservation&quot;</span>:{
+            <span class="st">&quot;id&quot;</span>:<span class="st">&quot;KIND&quot;</span>,
+            <span class="st">&quot;name&quot;</span>:<span class="st">&quot;Indianapolis International Airport&quot;</span>,
+            <span class="st">&quot;elev&quot;</span>:<span class="st">&quot;810&quot;</span>,
+            <span class="st">&quot;latitude&quot;</span>:<span class="st">&quot;39.73&quot;</span>,
+            <span class="st">&quot;longitude&quot;</span>:<span class="st">&quot;-86.27&quot;</span>,
+            <span class="st">&quot;Date&quot;</span>:<span class="st">&quot;24 Oct 15:54 pm EDT&quot;</span>,
+            <span class="st">&quot;Temp&quot;</span>:<span class="st">&quot;38&quot;</span>,
+            <span class="st">&quot;Dewp&quot;</span>:<span class="st">&quot;33&quot;</span>,
+            <span class="st">&quot;Relh&quot;</span>:<span class="st">&quot;83&quot;</span>,
+            <span class="st">&quot;Winds&quot;</span>:<span class="st">&quot;12&quot;</span>,
+            <span class="st">&quot;Windd&quot;</span>:<span class="st">&quot;280&quot;</span>,
+            <span class="st">&quot;Gust&quot;</span>:<span class="st">&quot;0&quot;</span>,
+            <span class="st">&quot;Weather&quot;</span>:<span class="st">&quot; Light Rain &quot;</span>,
+            <span class="st">&quot;Weatherimage&quot;</span>:<span class="st">&quot;ra.png&quot;</span>,
+            <span class="st">&quot;Visibility&quot;</span>:<span class="st">&quot;10.00&quot;</span>,
+            <span class="st">&quot;Altimeter&quot;</span>:<span class="st">&quot;1022.0&quot;</span>,
+            <span class="st">&quot;SLP&quot;</span>:<span class="st">&quot;30.17&quot;</span>,
+            <span class="st">&quot;timezone&quot;</span>:<span class="st">&quot;EDT&quot;</span>,
+            <span class="st">&quot;state&quot;</span>:<span class="st">&quot;IN&quot;</span>,
+            <span class="st">&quot;WindChill&quot;</span>:<span class="st">&quot;31&quot;</span>
+        }
+    }</code></pre>
+<h2 id="hierarchy">Hierarchy</h2>
+<ul>
+<li>Metadata</li>
+<li>Location
+<ul>
+<li>Object with lat, lng, zone, etc..</li>
+</ul></li>
+<li>Time
+<ul>
+<li>Array of 'times'</li>
+</ul></li>
+<li>Actual Data
+<ul>
+<li>Temp</li>
+<li>Hazard</li>
+<li>Textual description</li>
+<li>Current observation</li>
+</ul></li>
+</ul>
+<h2 id="parallel-arrays">Parallel Arrays</h2>
+<ul>
+<li>The some of the arrays above are <strong>parallel arrays</strong></li>
+<li>A way of storing data associated with each other in two or more arrays</li>
+<li>Here one array stores names, while the other stores emplyment</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> names = [ <span class="st">&quot;Stan&quot;</span>, <span class="st">&quot;Lee&quot;</span>, <span class="st">&quot;Isolde&quot;</span> ];
+<span class="kw">var</span> employment = [ <span class="st">&quot;Janitor&quot;</span>, <span class="st">&quot;Cook&quot;</span>, <span class="st">&quot;Queen&quot;</span> ];</code></pre>
+<ul>
+<li>In the example above, entry 0 in names is realted to entry 0 in emplyment.</li>
+<li>So Stan is a Janitor, Lee is a cook, and Isolde is a Queen</li>
+<li>Can easily get all the data with a for loop</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">for</span>( <span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">names</span>.<span class="fu">length</span>; i++) {
+    <span class="kw">console</span>.<span class="fu">log</span>( names[i] + <span class="st">&quot; is a &quot;</span> + employment[i]);
+}</code></pre>
+<h2 id="parallel-data-in-the-weather-array">Parallel Data in the weather array</h2>
+<ul>
+<li>Time</li>
+<li>Temp</li>
+<li>Hazard</li>
+<li>Textual description</li>
+</ul>
+<h2 id="another-example---flickr">Another example - Flickr</h2>
+<ul>
+<li>http://api.flickr.com/services/feeds/photos_public.gne?format=json</li>
+</ul>
+<h2 id="flickr-output-truncated-to-2-results">Flickr output (truncated to 2 results)</h2>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">jsonFlickrFeed({
+        <span class="st">&quot;title&quot;</span>: <span class="st">&quot;Uploads from everyone&quot;</span>,
+        <span class="st">&quot;link&quot;</span>: <span class="st">&quot;http://www.flickr.com/photos/&quot;</span>,
+        <span class="st">&quot;description&quot;</span>: <span class="st">&quot;&quot;</span>,
+        <span class="st">&quot;modified&quot;</span>: <span class="st">&quot;2013-10-25T13:47:47Z&quot;</span>,
+        <span class="st">&quot;generator&quot;</span>: <span class="st">&quot;http://www.flickr.com/&quot;</span>,
+        <span class="st">&quot;items&quot;</span>: [
+       {
+            <span class="st">&quot;title&quot;</span>: <span class="st">&quot;makeup pic&quot;</span>,
+            <span class="st">&quot;link&quot;</span>: <span class="st">&quot;http://www.flickr.com/photos/106586208@N03/10475495325/&quot;</span>,
+            <span class="st">&quot;media&quot;</span>: {<span class="st">&quot;m&quot;</span>:<span class="st">&quot;http://farm4.staticflickr.com/3695/10475495325_fb23e861b8_m.jpg&quot;</span>},
+            <span class="st">&quot;date_taken&quot;</span>: <span class="st">&quot;2013-10-25T06:47:47-08:00&quot;</span>,
+            <span class="st">&quot;description&quot;</span>: <span class="st">&quot; &lt;p&gt;&lt;a href=</span><span class="ch">\&quot;</span><span class="st">http://www.flickr.com/people/106586208@N03/</span><span class="ch">\&quot;</span><span class="st">&gt;dylandambella&lt;\/a&gt; posted a photo:&lt;\/p&gt; &lt;p&gt;&lt;a href=</span><span class="ch">\&quot;</span><span class="st">http://www.flickr.com/photos/106586208@N03/10475495325/</span><span class="ch">\&quot;</span><span class="st"> title=</span><span class="ch">\&quot;</span><span class="st">makeup pic</span><span class="ch">\&quot;</span><span class="st">&gt;&lt;img src=</span><span class="ch">\&quot;</span><span class="st">http://farm4.staticflickr.com/3695/10475495325_fb23e861b8_m.jpg</span><span class="ch">\&quot;</span><span class="st"> width=</span><span class="ch">\&quot;</span><span class="st">240</span><span class="ch">\&quot;</span><span class="st"> height=</span><span class="ch">\&quot;</span><span class="st">240</span><span class="ch">\&quot;</span><span class="st"> alt=</span><span class="ch">\&quot;</span><span class="st">makeup pic</span><span class="ch">\&quot;</span><span class="st"> /&gt;&lt;\/a&gt;&lt;\/p&gt; &quot;</span>,
+            <span class="st">&quot;published&quot;</span>: <span class="st">&quot;2013-10-25T13:47:47Z&quot;</span>,
+            <span class="st">&quot;author&quot;</span>: <span class="st">&quot;nobody@flickr.com (dylandambella)&quot;</span>,
+            <span class="st">&quot;author_id&quot;</span>: <span class="st">&quot;106586208@N03&quot;</span>,
+            <span class="st">&quot;tags&quot;</span>: <span class="st">&quot;flickrandroidapp:filter=none&quot;</span>
+       },
+       {
+            <span class="st">&quot;title&quot;</span>: <span class="st">&quot;IMG_4059&quot;</span>,
+            <span class="st">&quot;link&quot;</span>: <span class="st">&quot;http://www.flickr.com/photos/prestigecb/10475495355/&quot;</span>,
+            <span class="st">&quot;media&quot;</span>: {<span class="st">&quot;m&quot;</span>:<span class="st">&quot;http://farm6.staticflickr.com/5499/10475495355_a866414924_m.jpg&quot;</span>},
+            <span class="st">&quot;date_taken&quot;</span>: <span class="st">&quot;2013-10-25T07:58:27-08:00&quot;</span>,
+            <span class="st">&quot;description&quot;</span>: <span class="st">&quot; &lt;p&gt;&lt;a href=</span><span class="ch">\&quot;</span><span class="st">http://www.flickr.com/people/prestigecb/</span><span class="ch">\&quot;</span><span class="st">&gt;Prestige Custom Builders&lt;\/a&gt; posted a photo:&lt;\/p&gt; &lt;p&gt;&lt;a href=</span><span class="ch">\&quot;</span><span class="st">http://www.flickr.com/photos/prestigecb/10475495355/</span><span class="ch">\&quot;</span><span class="st"> title=</span><span class="ch">\&quot;</span><span class="st">IMG_4059</span><span class="ch">\&quot;</span><span class="st">&gt;&lt;img src=</span><span class="ch">\&quot;</span><span class="st">http://farm6.staticflickr.com/5499/10475495355_a866414924_m.jpg</span><span class="ch">\&quot;</span><span class="st"> width=</span><span class="ch">\&quot;</span><span class="st">179</span><span class="ch">\&quot;</span><span class="st"> height=</span><span class="ch">\&quot;</span><span class="st">240</span><span class="ch">\&quot;</span><span class="st"> alt=</span><span class="ch">\&quot;</span><span class="st">IMG_4059</span><span class="ch">\&quot;</span><span class="st"> /&gt;&lt;\/a&gt;&lt;\/p&gt; &quot;</span>,
+            <span class="st">&quot;published&quot;</span>: <span class="st">&quot;2013-10-25T13:47:47Z&quot;</span>,
+            <span class="st">&quot;author&quot;</span>: <span class="st">&quot;nobody@flickr.com (Prestige Custom Builders)&quot;</span>,
+            <span class="st">&quot;author_id&quot;</span>: <span class="st">&quot;74246055@N07&quot;</span>,
+            <span class="st">&quot;tags&quot;</span>: <span class="st">&quot;&quot;</span>
+       }
+        ]
+})</code></pre>
+<h2 id="origin-policy-and-jsonp">Origin Policy and JSONP</h2>
+<ul>
+<li>JSON is great</li>
+<li>Lots of sites can output JSON</li>
+<li>However!</li>
+<li>Javascript cannot load files that are not on the same webserver</li>
+<li>A JS file on www.somesite.com cannot load from www.example.com</li>
+<li>This is sometime called the &quot;origin policy&quot;</li>
+<li>JSONP is the solution</li>
+</ul>
+<h2 id="jsonp">JSONP</h2>
+<ul>
+<li>Allows you to make cross-site calls</li>
+<li>Server providing the data must be configured to allow the load</li>
+<li><strong>When making the request</strong> need to provide a callback parameter</li>
+</ul>
+<pre><code>http://www.xyz.com/sample.aspx?callback=mycallback</code></pre>
+<ul>
+<li>Server wraps the JSON Data in a javascript function that is run when the data loads on your side</li>
+</ul>
+<p><em>Example server response</em></p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">mycallback({ <span class="dt">foo</span>: <span class="ch">&#39;bar&#39;</span> });</code></pre>
+<ul>
+<li>On your side, setup a function to run when the data loads</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">mycallback = <span class="kw">function</span>(data){
+  alert(<span class="kw">data</span>.<span class="fu">foo</span>);
+};</code></pre>
+<h2 id="reading-the-flickr-feed">Reading the Flickr Feed</h2>
+<ul>
+<li>Metadata at the top</li>
+<li>Items (array)</li>
+<li>Each item:
+<ul>
+<li>Data about each individual picture</li>
+<li>Key ones
+<ul>
+<li>Title</li>
+<li>Media</li>
+<li>Description</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="example-use-of-flickr-feed">Example use of flickr feed</h2>
+<ul>
+<li>Using jQuery (of course)</li>
+<li>Loads the most recent pictures, appends them into a div</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">
+$.<span class="fu">getJSON</span>(<span class="st">&quot;http://api.flickr.com/services/feeds/photos_public.gne?format=json&quot;</span>, <span class="kw">function</span>(data) {
+    <span class="co">//&#39;data&#39; has the</span>
+
+    <span class="kw">var</span> picturesDiv = $(<span class="st">&quot;#pDiv&quot;</span>);
+
+    <span class="kw">for</span>(<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="kw">data.items</span>.<span class="fu">length</span>; i++) {
+        <span class="kw">picturesDiv</span>.<span class="fu">append</span>(<span class="st">&quot;&lt;img src=&#39;&quot;</span> + <span class="kw">data</span>.<span class="fu">items</span>[i].<span class="fu">media</span> + <span class="st">&quot;&#39; /&gt;&quot;</span>)
+    }
+})</code></pre>
+</body>
+</html>
