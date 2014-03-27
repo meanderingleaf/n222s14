@@ -97,12 +97,13 @@ JSON.parse
 
 - Take a string that contains valid JSON
 - Turns it into a javascript object
+- In plain javascript its JSON.parse
 - In jQuery, its `$.parseJSON`
 
 getJSON
 -----------------------------------------
 
-- Alternatively, in jQuery, use th `getJson` method
+- Alternatively, in jQuery, use the `getJson` method
 
 ```{.javascript}
 $.getJSON( "ajax/test.json", function( data ) {
@@ -213,7 +214,7 @@ $.getJSON( "ajax/test.json", function( data ) {
 );
 ```
 
-Example - Gettin extra information about the album of the clicked item
+Example - Getting extra information about the album of the clicked item
 -----------------------------------------
 
 ```{.javascript}
