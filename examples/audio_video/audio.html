@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<title>Sound test</title>
+	</head>
+	<body>
+		<div>
+			<h2>Sound Test</h2>
+			<input type="button" id="soundBtn" value="Play that sound" /><br />
+			<input type="button" id="changeSound" value="Change that sound" /><br />
+			<progress id="musicProgress" value="0" max="100"></progress>
+			<div id="soundStatus">
+				Not playing
+			</div>
+			<audio id="myAudio">
+			  <source src="../assets/boop.wav" type="audio/wav">
+			</audio>
+		</div>
+
+		<script>
+
+			var playing = false;
+
+			//get dat sound
+			var myAudio = document.getElementById('myAudio');
+			var musicProgress = document.getElementById('musicProgress');
+			var soundStatus = document.getElementById('soundStatus');
+			myAudio.addEventListener('ended', function(event) {
+				soundStatus.innerHTML = "Not playing";
+			})
+
+			var soundBtn = document.getElementById('soundBtn');
+			soundBtn.addEventListener('click', function(event) {
+				myAudio.play();
+				playing = true;
+				soundStatus.innerHTML = "Playing";
+			})
+
+			//waits until the audio is ready to play
+			myAudio.addEventListener('canplay', function(event) {
+				
+			})
+
+			setInterval(function() {
+				if(playing) {
+					musicProgress.value = (myAudio.currentTime / myAudio.duration) * 100;
+					console.log(myAudio.currentTime + "/" + myAudio.duration);
+				}				
+			}, 10)
+
+			myAudio.addEventListener('ended', function(event) {
+				musicProgress.value = 100;
+				playing = false;
+			})
+
+
+			var changeSound = document.getElementById('changeSound');
+			changeSound.addEventListener('click', function(event) {
+				myAudio.src= "../assets/coin.wav";
+				myAudio.load();
+			})
+		</script>
+	</body>
+</html>

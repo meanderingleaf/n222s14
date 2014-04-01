@@ -1,0 +1,57 @@
+Audio and video
+------------------------------
+
+
+Audio and video in javascript, are, surpringsingly easy. Sort of.
+
+Audio
+------------------------------
+
+In order to use audio in javascript one needs to have the audio loaded in at runtime, or via an audio tag.
+Either way, one needs to be using the correct format for that browser. [Check a website](http://www.w3schools.com/html/html5_audio.asp) to figure out what format is supported by the browsers you are targeting. As of writing this, there is **not one 'winning' format**. Instead, you will probably need to use a combination of mp3/wav to hit all browers.
+
+Well then, the Audio Tag
+------------------------------
+
+Getting sound into our web pages isn't too hard, use the audio tag
+
+```
+<audio id="myAudio">
+  <source src="horse.wav" type="audio/wav">
+  <source src="horse.mp3" type="audio/mpeg">
+</audio>
+```
+
+Playing a sound
+----------------------------
+
+```
+var myAudio = document.getElementById('myAudio');
+myAudio.play();
+```
+
+Listening for sound events
+----------------------------
+
+There's more to life than mouse events.
+Let's listen for when a sound ends:
+
+```
+myAudio.addEventListener('ended', function(event) {
+	//Sound is over.
+})
+```
+
+Changing the audio to be played
+----------------------------
+
+```
+myAudio.src = "new/url/to/file.wav";
+```
+
+Audio events
+----------------------------
+
+- A few key ones
+- **ended**: fires when the audio has finished playing
+- **canplay**: fires when the audio is loaded enough to play
