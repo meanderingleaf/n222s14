@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+
+
+		<div>
+			Title: <input id="txtSearch" /><br />
+			<input id="btnSearch" type="button" value="search">
+		</div>
+		<div id="content">
+			<div id="browse"></div>
+			<div id="info"></div>
+		</div>
+
+		<!-- templates -->
+		<script id="homePage" type="text/x-handlebars-template">
+			Its {{name}}
+		</script>
+
+
+		<script id="bookHomeLinks" type="text/x-handlebars-template">
+			<ul class="book_list">
+			  {{#each books}}
+			  		<li class='bookLink' data-id="{{@index}}">{{this.title}}</li>
+			  {{/each}}
+			</ul>
+		</script>
+
+		<script id="bookInfo" type="text/x-handlebars-template">
+			<div>
+				<div class='bookTitle'>{{title}}</div>
+				<div class='bookAuthor'>{{author}}</div>
+				<div class='bookPubdate'>{{date}}</div>
+			</div>
+		</script>
+
+		<!-- js -->
+		<script src="js/handlebars-v1.3.0.js"></script>
+		<script src="js/jquery-2.1.0.min.js"></script>
+
+		<!-- our page script -->
+		<script>
+
+			var books;
+
+			$(document).ready(function() {
+
+				//get reference to main div
+				var contentDiv = $("#content");
+				var bookInfoDiv = $("#info");
+				var browseDiv = $("#browse");
+
+				//make templates
+				var homepageTemplate = Handlebars.compile($("#homePage").html());
+				var bookLinkTemplate = Handlebars.compile($("#bookHomeLinks").html());
+				var bookInfoTemplate = Handlebars.compile($("#bookInfo").html());
+
+				//data to put into the template
+				var context = { name: "Stanley" };
+
+				//generate HTML markup using the data and the 
+				var html = homepageTemplate(context);
+
+
+				$.getJSON('data/books.json', function(data) {
+					books = data.books;
+					browseDiv.append(bookLinkTemplate(data));
+				})
+
+				//blarg
+				$( "#content" ).on( "click", ".bookLink", function() {
+					console.log( bookInfoTemplate( books[$( this ).data('id')] ) );
+				  	bookInfoDiv.html(bookInfoTemplate( books[$( this ).data('id')] ) );
+				});
+
+				$("#btnSearch").click(function() {
+					var searchTerm = $("#txtSearch").val();
+					
+					//object with an array in it
+					var results = {
+						books: []
+					};
+
+					for(var i =0; i < books.length; i++) {
+						var titleSplit = books[i].title.split(' ');
+						
+						for(var y = 0; y < titleSplit.length; y++) {
+							if(titleSplit[y] == searchTerm) {
+								results.books.push( books[i] );
+								console.log('yeah');
+								break;
+							}
+						}
+					}
+
+					browseDiv.html(bookLinkTemplate(results));
+				})
+
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+{
+	"books": [
+
+		{
+			"title": "Awesome",
+			"author": "Doctor Doctor",
+			"date": "9-20-2004" 
+		},
+		{
+			"title": "Flying Canoe",
+			"author": "Daring David",
+			"date": "5-05-1922" 
+		},
+		{
+			"title": "Who's Lauging Now?",
+			"author": "Trafalgar",
+			"date": "1-11-2011" 
+		}
+	]
+
+}
