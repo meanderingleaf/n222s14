@@ -25,7 +25,7 @@
 		<script id="bookHomeLinks" type="text/x-handlebars-template">
 			<ul class="book_list">
 			  {{#each books}}
-			  		<li class='bookLink' data-id="{{@index}}">{{this.title}}</li>
+			  		<li class='bookLink' data-id="{{this.id}}">{{this.title}}</li>
 			  {{/each}}
 			</ul>
 		</script>
@@ -83,8 +83,8 @@
 
 				//blarg
 				$( "#content" ).on( "click", ".bookLink", function() {
-					console.log( bookInfoTemplate( books[$( this ).data('id')] ) );
-				  	bookInfoDiv.html(bookInfoTemplate( books[$( this ).data('id')] ) );
+					var bookInfo = _.findWhere(books, { id: $( this ).data('id') })
+				  	bookInfoDiv.html(bookInfoTemplate( bookInfo) );
 				});
 
 				$("#content").on("click", ".genreLink", function() {
