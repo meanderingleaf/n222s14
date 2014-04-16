@@ -9,9 +9,11 @@
 			Title: <input id="txtSearch" /><br />
 			<input id="btnSearch" type="button" value="search">
 		</div>
+
 		<div id="content">
 			<div id="browse"></div>
 			<div id="info"></div>
+			<div id="genres"></div>
 		</div>
 
 		<!-- templates -->
@@ -28,6 +30,15 @@
 			</ul>
 		</script>
 
+
+		<script id="genreLinks" type="text/x-handlebars-template">
+			<ul class="genre_list">
+			  {{#each this}}
+			  		<li class='genreLink'>{{this}}</li>
+			  {{/each}}
+			</ul>
+		</script>
+
 		<script id="bookInfo" type="text/x-handlebars-template">
 			<div>
 				<div class='bookTitle'>{{title}}</div>
@@ -39,6 +50,7 @@
 		<!-- js -->
 		<script src="js/handlebars-v1.3.0.js"></script>
 		<script src="js/jquery-2.1.0.min.js"></script>
+		<script src="js/underscore-min.js"></script>
 
 		<!-- our page script -->
 		<script>
@@ -51,21 +63,22 @@
 				var contentDiv = $("#content");
 				var bookInfoDiv = $("#info");
 				var browseDiv = $("#browse");
+				var genreDiv = $("#genres");
 
 				//make templates
-				var homepageTemplate = Handlebars.compile($("#homePage").html());
-				var bookLinkTemplate = Handlebars.compile($("#bookHomeLinks").html());
-				var bookInfoTemplate = Handlebars.compile($("#bookInfo").html());
-
-				//data to put into the template
-				var context = { name: "Stanley" };
+				var homepageTemplate = Handlebars.compile( $("#homePage").html() );
+				var bookLinkTemplate = Handlebars.compile( $("#bookHomeLinks").html() );
+				var bookInfoTemplate = Handlebars.compile( $("#bookInfo").html() );
+				var genreLinkTemplate = Handlebars.compile( $("#genreLinks").html() );
 
 				//generate HTML markup using the data and the 
-				var html = homepageTemplate(context);
+				//var html = homepageTemplate(context);
+
 
 				$.getJSON('data/books.json', function(data) {
 					books = data.books;
 					browseDiv.append(bookLinkTemplate(data));
+					genreDiv.html( genreLinkTemplate(data.genres) );
 				})
 
 				//blarg
@@ -73,6 +86,16 @@
 					console.log( bookInfoTemplate( books[$( this ).data('id')] ) );
 				  	bookInfoDiv.html(bookInfoTemplate( books[$( this ).data('id')] ) );
 				});
+
+				$("#content").on("click", ".genreLink", function() {
+					var genreToFind = $(this).html();
+
+					var results = {};
+					results.books  = _.where(books, { genre: genreToFind })
+
+					console.log(results);
+					browseDiv.html(bookLinkTemplate(results));
+				})
 
 				$("#btnSearch").click(function() {
 					var searchTerm = $("#txtSearch").val();
@@ -82,17 +105,14 @@
 						books: []
 					};
 
-					for(var i =0; i < books.length; i++) {
-						var titleSplit = books[i].title.split(' ');
-						
-						for(var y = 0; y < titleSplit.length; y++) {
-							if(titleSplit[y] == searchTerm) {
-								results.books.push( books[i] );
-								console.log('yeah');
-								break;
-							}
-						}
-					}
+					results.books = _.filter(books, function(item) {
+						return (item.title.indexOf(searchTerm) != -1);
+						/*
+						return _.find(titleSplit, function(titleWord) {
+							return titleWord.toUpperCase() == searchTerm.toUpperCase();
+						})
+						*/
+					})
 
 					browseDiv.html(bookLinkTemplate(results));
 				})
